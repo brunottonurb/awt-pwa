@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 const MediaItem = ({
   title,
   tagline,
-  onClickPlay,
-  onClickDownload,
+  id,
   imgSrc,
 }) => (
   <div className="col-md-6" style={{ marginBottom: '1rem' }}>
@@ -16,8 +15,8 @@ const MediaItem = ({
         <p className="card-text">{tagline}</p>
         <div className="text-right">
           <div className="btn-group" role="group" aria-label="Basic example">
-            <button type="button" className="btn btn-secondary" onClick={onClickDownload}>Download</button>
-            <button type="button" className="btn btn-primary" onClick={onClickPlay}>Watch now!</button>
+            <a className="btn btn-secondary" href={`/#/download/${id}`} role="button">Download</a>
+            <a className="btn btn-primary" href={`/#/stream/${id}`} role="button">Watch now!</a>
           </div>
         </div>
       </div>
@@ -28,8 +27,7 @@ const MediaItem = ({
 MediaItem.propTypes = {
   title: PropTypes.string.isRequired,
   tagline: PropTypes.string.isRequired,
-  onClickDownload: PropTypes.func.isRequired,
-  onClickPlay: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
   imgSrc: PropTypes.string.isRequired,
 };
 

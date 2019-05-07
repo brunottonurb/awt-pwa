@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Player = ({
-  videoId,
-  mode,
+  videoUrl,
 }) => (
   <div className="card" style="margin-top: 0.5rem;">
     <div className="card-header">
@@ -18,8 +17,7 @@ const Player = ({
 );
 
 Player.propTypes = {
-  videoId: PropTypes.string.isRequired,
-  mode: PropTypes.oneOf(['stream', 'offline']).isRequired,
+  videoUrl: PropTypes.string.isRequired,
 };
 
 export const Player;

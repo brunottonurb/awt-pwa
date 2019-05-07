@@ -6,10 +6,7 @@ const DownloadItem = ({
   progress,
   done,
   downloading,
-  onClickPause,
-  onClickCancel,
-  onClickWatch,
-  onClickDelete,
+  id,
 }) => (
   <li className="list-group-item">
     {title}
@@ -31,7 +28,6 @@ const DownloadItem = ({
           <button
             type="button"
             className="btn btn-light"
-            onClick={downloading ? () => onClickPause(true) : () => onClickPause(false)}
           >
             {downloading ? 'Pause' : 'Resume'}
           </button>
@@ -44,7 +40,7 @@ const DownloadItem = ({
         </Fragment>
         ) : (
         <Fragment>
-          <button type="button" className="btn btn-primary">Watch</button>
+          <a className="btn btn-primary" href={`/#/downloads/${id}`} role="button">Watch</a>
           <button type="button" className="btn btn-danger">Remove</button>
         </Fragment>
       )}
@@ -56,10 +52,7 @@ DownloadItem.propTypes = {
   title: PropTypes.string.isRequired,
   done: PropTypes.bool,
   progress: PropTypes.number,
-  onClickPause: PropTypes.func.isRequired,
-  onClickCancel: PropTypes.func.isRequired,
-  onClickWatch: PropTypes.func.isRequired,
-  onClickDelete: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
   downloading: PropTypes.bool,
 };
 

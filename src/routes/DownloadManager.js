@@ -4,43 +4,31 @@ import DownloadItem from '../components/DownloadItem';
 
 const DownloadManager = () => (
   <Fragment>
-    <ul className="list-group" style={{ marginTop: '1rem' }}>
+    <ul className="list-group">
       {[
         {
           title: 'Rickey Rat',
           progress: 27,
           done: false,
           downloading: true,
-          onClickPause: () => { },
-          onClickCancel: () => { },
-          onClickWatch: () => { },
-          onClickDelete: () => { },
+          id: 'dcvrev',
         },
         {
           title: 'El Duderino',
           progress: 80,
           done: false,
           downloading: false,
-          onClickPause: () => { },
-          onClickCancel: () => { },
-          onClickWatch: () => { },
-          onClickDelete: () => { },
+          id: 'ewfrf',
         },
         {
           title: 'More Coffee Please',
           done: true,
-          onClickPause: () => { },
-          onClickCancel: () => { },
-          onClickWatch: () => { },
-          onClickDelete: () => { },
+          id: 'eeronfr',
         },
         {
           title: 'Ciao Ragazza',
           done: true,
-          onClickPause: () => { },
-          onClickCancel: () => { },
-          onClickWatch: () => { },
-          onClickDelete: () => { },
+          id: 'erponfir',
         }
       ].map((props, index) => <DownloadItem {...props} key={`download_${index}_${props.title}`} />)}
     </ul>

@@ -6,31 +6,27 @@ const MediaBrowser = () => (
     <div className="row">
       {[
         {
-          title: 'Eyes Burning',
-          tagline: 'No time for blinking.',
-          onClickPlay: () => { },
-          onClickDownload: () => { },
+          title: 'Gugugu',
+          tagline: 'Gagaga',
+          id: '001',
           imgSrc: 'test.png',
         },
         {
           title: 'Clever Title',
           tagline: 'Makes everybody laught',
-          onClickPlay: () => { },
-          onClickDownload: () => { },
+          id: '002',
           imgSrc: 'test.png',
         },
         {
           title: 'Texas Ricecracker Massacre',
           tagline: 'Lorem Ipsum dopoewjrofhoiewc hveoi em doeewc hoi',
-          onClickPlay: () => { },
-          onClickDownload: () => { },
+          id: '003',
           imgSrc: 'test.png',
         },
         {
           title: 'Mission Failed',
           tagline: 'All you had to do was follow the damn train!',
-          onClickPlay: () => { },
-          onClickDownload: () => { },
+          id: '004',
           imgSrc: 'test.png',
         },
       ].map((props, index) => <MediaItem {...props} key={`media_${index}_${props.title}`} />)}

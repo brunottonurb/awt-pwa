@@ -4,6 +4,7 @@ import './App.css';
 import Nav from './components/Nav';
 import MediaBrowser from './routes/MediaBrowser';
 import DownloadManager from './routes/DownloadManager';
+import MediaPlayer from './routes/MediaPlayer';
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const App = () => {
             </div>
           )}
           <Route
+            component={() => <p>todo welcome</p>}
+            exact
+            path="/"
+          />
+          <Route
             component={MediaBrowser}
             exact
             path="/media"
@@ -58,7 +64,7 @@ const App = () => {
             path="/downloads"
           />
           <Route
-            component={() => <p>testing player</p>}
+            component={MediaPlayer}
             exact
             path="/stream/:id"
           />
