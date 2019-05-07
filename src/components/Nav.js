@@ -6,7 +6,7 @@ const Nav = ({ routes }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="navbar navbar-expand-sm navbar-light bg-light fixed-top">
+    <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
       <a className="navbar-brand" href="/#/">AWT-PWA</a>
       <button
         className="navbar-toggler"
