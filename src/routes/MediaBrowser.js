@@ -2,6 +2,14 @@ import React, { Fragment } from 'react';
 import MediaItem from '../components/MediaItem';
 import videos from '../data/videos';
 
+const downloadMedia = (video) => { // function is called when download is clicked
+  window.storage.store(video.manifestUri, {
+    title: video.title,
+    downloaded: Date(),
+    id: video.id,
+  }); // start downloading
+} 
+
 const MediaBrowser = () => {
   return (
     <Fragment>
@@ -15,7 +23,13 @@ const MediaBrowser = () => {
         </div>
       </form>
       <div className="row">
-        {videos.map((props, index) => <MediaItem {...props} key={`media_${index}_${props.title}`} />)}
+        {videos.map((video, index) => (
+          <MediaItem
+            {...video}
+            key={`media_${index}_${video.title}`}
+            onClickDownload={() => downloadMedia(video)}
+          />
+        ))}
       </div>
     </Fragment>
   );

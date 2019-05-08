@@ -27,12 +27,15 @@ const App = () => {
   const [isShakaSupported, setIsShakaSupported] = useState(true);
   const [isIndexedDbSupported, setIsIndexedDbSupported] = useState(true);
 
-  useEffect(() => {
+  useEffect(() => { // on app mount
     const shaka = window.shaka;
-    shaka.polyfill.installAll();
-    setIsShakaSupported(shaka.Player.isBrowserSupported());
+    shaka.polyfill.installAll(); // install shaka polyfills
+    setIsShakaSupported(shaka.Player.isBrowserSupported()); // display warning if shaka not supported 
     const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-    setIsIndexedDbSupported(!!indexedDB);
+    setIsIndexedDbSupported(!!indexedDB); // display warning if indexedDB not supported
+    if (!indexedDB) return;
+
+    window.storage = new shaka.offline.Storage(); // initialize shaka storage
   }, []);
 
   return (
@@ -66,7 +69,7 @@ const App = () => {
           <Route
             component={MediaPlayer}
             exact
-            path="/stream/:id"
+            path="/:mode(stream|offline)/:id"
           />
         </main>
       </div>

@@ -1,40 +1,33 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import StorageInfo from '../components/StorageInfo';
 import DownloadItem from '../components/DownloadItem';
 
-const DownloadManager = () => (
-  <Fragment>
-    <ul className="list-group">
-      {[
-        {
-          title: 'Rickey Rat',
-          progress: 27,
-          done: false,
-          downloading: true,
-          id: 'dcvrev',
-        },
-        {
-          title: 'El Duderino',
-          progress: 80,
-          done: false,
-          downloading: false,
-          id: 'ewfrf',
-        },
-        {
-          title: 'More Coffee Please',
-          done: true,
-          id: 'eeronfr',
-        },
-        {
-          title: 'Ciao Ragazza',
-          done: true,
-          id: 'erponfir',
-        }
-      ].map((props, index) => <DownloadItem {...props} key={`download_${index}_${props.title}`} />)}
-    </ul>
-    <StorageInfo max={2000} current={500} />
-  </Fragment>
-);
+const DownloadManager = () => {
+  const [downloadList, setDownloadList] = useState([]);
+
+  useEffect(() => {
+    if (window.storage) window.storage.list().then((list) => {
+      console.log(list)
+      setDownloadList(list);
+    });
+  }, []);
+
+  return (
+    <Fragment>
+      <ul className="list-group">
+        {downloadList.map(({ appMetadata }, index) => (
+          <DownloadItem
+            title={appMetadata.title}
+            key={`download_${index}_${appMetadata.title}`}
+            done
+            id={appMetadata.id}
+          />
+        ))}
+      </ul>
+      <StorageInfo max={2000} current={500} />
+    </Fragment>
+  );
+};
 
 export default DownloadManager;
 
