@@ -29,10 +29,9 @@ const MediaPlayer = ({ match, history }) => {
         </button>
       </div>
       <div className="card-body">
-        video id: {match.params.id}
         <video
           ref={videoEl}
-          width="100%"
+          style={{ width: '100%', maxHeight: '80vh' }}
           poster="//shaka-player-demo.appspot.com/assets/poster.jpg"
           controls
           autoPlay
