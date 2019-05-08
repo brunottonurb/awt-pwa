@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 const Nav = ({ routes }) => {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+
+  const setIsOnlineTrue = () => setIsOnline(true);
+  const setIsOnlineFalse = () => setIsOnline(false);
+
+  useEffect(() => {
+    window.addEventListener('online', setIsOnlineTrue);
+    window.addEventListener('offline', setIsOnlineFalse);
+    return () => {
+      window.removeEventListener("online", setIsOnlineTrue);
+      window.removeEventListener('offline', setIsOnlineFalse);
+    };
+  });
 
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
@@ -11,13 +24,13 @@ const Nav = ({ routes }) => {
       <button
         className="navbar-toggler"
         type="button"
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-label="Toggle navigation"
-        onClick={() => setOpen(!open)}
+        onClick={() => setIsOpen(!isOpen)}
       >
         <span className="navbar-toggler-icon"></span>
       </button>
-      <div className={`collapse navbar-collapse ${open ? 'show': ''}`}>
+      <div className={`collapse navbar-collapse ${isOpen ? 'show': ''}`}>
         <div className="navbar-nav">
           {routes.map(({
             exact,
@@ -29,7 +42,7 @@ const Nav = ({ routes }) => {
               key={key}
               exact={exact}
               to={path}
-              onClick={() => setOpen(false)}
+              onClick={() => setIsOpen(false)}
               className="nav-item nav-link"
               activeClassName="active"
             >
@@ -38,6 +51,10 @@ const Nav = ({ routes }) => {
           ))}
         </div>
       </div>
+      {isOnline
+        ? <button type="button" className="btn btn-success" disabled>Online</button>
+        : <button type="button" className="btn btn-danger" disabled>Offline</button>
+      }
     </nav>
   );
 };
