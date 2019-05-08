@@ -7,7 +7,6 @@ const DownloadManager = () => {
 
   useEffect(() => {
     if (window.storage) window.storage.list().then((list) => {
-      console.log(list)
       setDownloadList(list);
     });
   }, []);
@@ -30,7 +29,3 @@ const DownloadManager = () => {
 };
 
 export default DownloadManager;
-
-// TODO pass the available movies as props
-// should be array of objects
-// with image url, title, tagline, functions?

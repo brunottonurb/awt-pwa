@@ -6,8 +6,6 @@ const MediaPlayer = ({ match, history }) => {
   const metadata = videos.find((video => video.id === match.params.id)); // get id from URL, metadata from datastore
 
   useEffect(() => {
-    console.log('metadata: ', metadata);
-    console.log('storage: ', window.storage);
     if (metadata && window.storage) {
       const player = new window.shaka.Player(videoEl.current); // initialize player on component mount
 
@@ -21,7 +19,6 @@ const MediaPlayer = ({ match, history }) => {
       } else { // mode === 'offline'
         // get offlineUri from storage
         window.storage.list().then((list) => {
-          console.log(match.params.id)
           const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
           player.load(offlineVideo.offlineUri); // start playing from storage
         });
