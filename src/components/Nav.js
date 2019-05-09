@@ -16,7 +16,7 @@ const Nav = ({ routes }) => {
       window.removeEventListener("online", setIsOnlineTrue);
       window.removeEventListener('offline', setIsOnlineFalse);
     };
-  });
+  },[]);
 
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
