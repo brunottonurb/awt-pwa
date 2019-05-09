@@ -1,16 +1,37 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import MediaItem from '../components/MediaItem';
 import videos from '../data/videos';
 
 const downloadMedia = (video) => { // function is called when download is clicked
-  window.storage.store(video.manifestUri, {
-    title: video.title,
-    downloaded: Date(),
-    id: video.id,
-  }); // start downloading
+  if (!window.storage.getStoreInProgress()) {
+    window.storage.store(video.manifestUri, {
+      title: video.title,
+      downloaded: Date(),
+      id: video.id,
+    }); // start downloading
+  } else { alert('Download already in Progress!'); }
 } 
 
-const MediaBrowser = () => {
+const MediaBrowser = ({ history }) => {
+  const onClickDownload = (video) => {
+    downloadMedia(video);
+    history.push('/downloads');
+  };
+
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+
+  const setIsOnlineTrue = () => setIsOnline(true);
+  const setIsOnlineFalse = () => setIsOnline(false);
+
+  useEffect(() => { // listen to online status
+    window.addEventListener('online', setIsOnlineTrue);
+    window.addEventListener('offline', setIsOnlineFalse);
+    return () => { // clean up on component unmount
+      window.removeEventListener("online", setIsOnlineTrue);
+      window.removeEventListener('offline', setIsOnlineFalse);
+    };
+  },[]);
+
   return (
     <Fragment>
       <form className="form-inline" style={{ paddingBottom: '1rem' }}>
@@ -27,7 +48,8 @@ const MediaBrowser = () => {
           <MediaItem
             {...video}
             key={`media_${index}_${video.title}`}
-            onClickDownload={() => downloadMedia(video)}
+            onClickDownload={() => onClickDownload(video)}
+            allowDownload={!!isOnline}
           />
         ))}
       </div>

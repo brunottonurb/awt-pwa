@@ -35,6 +35,16 @@ const App = () => {
     setIsIndexedDbSupported(shaka.offline.Storage.support()); // display warning if indexedDB not supported
 
     window.storage = new shaka.offline.Storage(); // initialize shaka storage
+    const dispatchProgressEvent = (content, progress) => {
+      // create custom event to track download progress
+      // this will probably no longer be necessary in the next version of shaka
+      const progressEvent = new CustomEvent('custom-progress', { detail: { progress, content } });
+      window.dispatchEvent(progressEvent);
+    }
+    window.storage.configure({ // configure storage to emit progress events that we can subscribe to elsewhere
+      progressCallback: dispatchProgressEvent,
+    });
+
     setIsInit(true);
   }, []);
 

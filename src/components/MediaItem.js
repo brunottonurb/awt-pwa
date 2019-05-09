@@ -7,6 +7,7 @@ const MediaItem = ({
   id,
   poster,
   onClickDownload,
+  allowDownload,
 }) => (
   <div className="col-md-6" style={{ marginBottom: '1rem' }}>
     <div className="card bg-dark text-white" style={{ background: 'black' }}>
@@ -20,16 +21,18 @@ const MediaItem = ({
         <h5 className="card-title">{title}</h5>
         <p className="card-text">{tagline}</p>
         <div className="text-right">
-          <div className="btn-group" role="group" aria-label="Basic example">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onClickDownload}
-            >
-              Download
-            </button>
-            <a className="btn btn-primary" href={`/#/stream/${id}`} role="button">Watch now!</a>
-          </div>
+            {allowDownload && (
+              <div className="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={onClickDownload}
+                >
+                  Download
+                </button>
+                <a className="btn btn-primary" href={`/#/stream/${id}`} role="button">Watch now!</a>
+            </div>
+            )}
         </div>
       </div>
     </div>
@@ -42,6 +45,7 @@ MediaItem.propTypes = {
   id: PropTypes.string.isRequired,
   poster: PropTypes.string.isRequired,
   onClickDownload: PropTypes.func.isRequired,
+  allowDownload: PropTypes.bool.isRequired,
 };
 
 export default MediaItem;

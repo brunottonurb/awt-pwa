@@ -9,10 +9,10 @@ const Nav = ({ routes }) => {
   const setIsOnlineTrue = () => setIsOnline(true);
   const setIsOnlineFalse = () => setIsOnline(false);
 
-  useEffect(() => {
+  useEffect(() => { // listen to online status
     window.addEventListener('online', setIsOnlineTrue);
     window.addEventListener('offline', setIsOnlineFalse);
-    return () => {
+    return () => { // clean up on component unmount
       window.removeEventListener("online", setIsOnlineTrue);
       window.removeEventListener('offline', setIsOnlineFalse);
     };
