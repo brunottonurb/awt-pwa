@@ -24,6 +24,7 @@ const routes = [
 ];
 
 const App = () => {
+  const [isInit, setIsInit] = useState(false);
   const [isShakaSupported, setIsShakaSupported] = useState(true);
   const [isIndexedDbSupported, setIsIndexedDbSupported] = useState(true);
 
@@ -31,12 +32,13 @@ const App = () => {
     const shaka = window.shaka;
     shaka.polyfill.installAll(); // install shaka polyfills
     setIsShakaSupported(shaka.Player.isBrowserSupported()); // display warning if shaka not supported 
-    const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-    setIsIndexedDbSupported(!!indexedDB); // display warning if indexedDB not supported
-    if (!indexedDB) return;
+    setIsIndexedDbSupported(shaka.offline.Storage.support()); // display warning if indexedDB not supported
 
     window.storage = new shaka.offline.Storage(); // initialize shaka storage
+    setIsInit(true);
   }, []);
+
+  if (!isInit) return <p>loading...</p>;
 
   return (
     <Router onUpdate={() => window.scrollTo(0, 0)}>
