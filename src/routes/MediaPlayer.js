@@ -1,8 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import videos from '../data/videos';
+import React, { useEffect, useRef, useContext } from 'react';
+import { Store } from '../Store';
 
 const MediaPlayer = ({ match, history }) => {
   const videoEl = useRef(null); // reference to the <video> element
+
+  const { state } = useContext(Store);
+  const { videos } = state;
   const metadata = videos.find((video => video.id === match.params.id)); // get id from URL, metadata from datastore
 
   useEffect(() => {
