@@ -3,8 +3,9 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 import { Store } from './Store';
 import './App.css';
 import Nav from './components/Nav';
-import MediaBrowser from './routes/MediaBrowser';
 import DownloadManager from './routes/DownloadManager';
+import Home from './routes/Home';
+import MediaBrowser from './routes/MediaBrowser';
 import MediaPlayer from './routes/MediaPlayer';
 
 const routes = [
@@ -88,6 +89,11 @@ const App = () => {
             </div>
           ) : (
             <Fragment>
+              <Route
+                component={Home}
+                exact
+                path="/"
+              />
               <Route
                 component={MediaBrowser}
                 exact
