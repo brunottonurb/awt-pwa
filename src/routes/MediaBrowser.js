@@ -1,21 +1,22 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
+import { Store } from '../Store';
 import MediaItem from '../components/MediaItem';
-import videos from '../data/videos';
-
-const downloadMedia = (video) => { // function is called when download is clicked
-  if (!window.storage.getStoreInProgress()) {
-    window.storage.store(video.manifestUri, {
-      title: video.title,
-      downloaded: Date(),
-      id: video.id,
-    }); // start downloading
-  } else { alert('Download already in Progress!'); }
-} 
 
 const MediaBrowser = ({ history }) => {
-  const onClickDownload = (video) => {
-    downloadMedia(video);
-    history.push('/downloads');
+  const { state } = useContext(Store);
+
+  const { downloadInProgres, videos } = state;
+
+  const downloadVideo = (videoId) => {
+    if (!downloadInProgres) {
+      const video = videos.find(v => v.id === videoId);
+      window.storage.store(video.manifestUri, {
+        downloaded: Date(),
+        id: video.id,
+        title: video.title,
+      });
+      history.push('/downloads');
+    } else alert('Download already in Progress!');
   };
 
   const [isOnline, setIsOnline] = useState(window.navigator.onLine);
@@ -48,7 +49,7 @@ const MediaBrowser = ({ history }) => {
           <MediaItem
             {...video}
             key={`media_${index}_${video.title}`}
-            onClickDownload={() => onClickDownload(video)}
+            onClickDownload={() => downloadVideo(video.id)}
             allowDownload={!!isOnline}
           />
         ))}

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext, Fragment } from 'react';
 import { HashRouter as Router, Route } from 'react-router-dom';
+import { Store } from './Store';
 import './App.css';
 import Nav from './components/Nav';
 import MediaBrowser from './routes/MediaBrowser';
@@ -8,45 +9,69 @@ import MediaPlayer from './routes/MediaPlayer';
 
 const routes = [
   {
-    label: 'Media',
-    key: 'media',
-    path: '/media',
     exact: true,
-    component: MediaBrowser,
+    key: 'media',
+    label: 'Media',
+    path: '/media',
   },
   {
-    label: 'Downloads',
-    key: 'downloads',
-    path: '/downloads',
     exact: true,
-    component: DownloadManager,
+    key: 'downloads',
+    label: 'Downloads',
+    path: '/downloads',
   },
 ];
 
-const App = () => {
-  const [isInit, setIsInit] = useState(false);
-  const [isShakaSupported, setIsShakaSupported] = useState(true);
-  const [isIndexedDbSupported, setIsIndexedDbSupported] = useState(true);
+const App = () => { 
+  const { state, dispatch } = useContext(Store);
 
-  useEffect(() => { // on app mount
+  const init = async () => {
+    // fetch video data
+    const data = await fetch('/data/videos.json');
+    const dataJSON = await data.json();
+
+    // init shaka
     const shaka = window.shaka;
-    shaka.polyfill.installAll(); // install shaka polyfills
-    setIsShakaSupported(shaka.Player.isBrowserSupported()); // display warning if shaka not supported 
-    setIsIndexedDbSupported(shaka.offline.Storage.support()); // display warning if indexedDB not supported
+    shaka.polyfill.installAll();
 
-    window.storage = new shaka.offline.Storage(); // initialize shaka storage
-    const dispatchProgressEvent = (content, progress) => {
-      // create custom event to track download progress
-      // this will probably no longer be necessary in the next version of shaka
-      const progressEvent = new CustomEvent('custom-progress', { detail: { progress, content } });
-      window.dispatchEvent(progressEvent);
-    }
-    window.storage.configure({ // configure storage to emit progress events that we can subscribe to elsewhere
-      progressCallback: dispatchProgressEvent,
+    // initialize shaka storage
+    window.storage = new shaka.offline.Storage();
+    // make shaka dispatch progress events so that we can have a progress bar when downloading
+    // this will probably no longer be necessary in the next version of shaka
+    const progressCallback = (content, progress) => {
+      dispatch({
+        type: 'DOWNLOAD_PROGRESS',
+        content,
+        progress, 
+      });
+    };
+    window.storage.configure({ progressCallback });
+
+    // start interval that updates the state every second
+    // this is a dirty hack and I hope shaka will provide
+    // better tools in the future
+    setInterval(() => {
+      dispatch({
+        type: 'SET_IS_DOWNLOAD_IN_PROGRESS',
+        value: window.storage.getStoreInProgress(),
+      });
+    }, 1000);
+
+    return dispatch({
+      type: 'INIT_DONE',
+      videos: dataJSON,
+      isInit: true,
+      isSupported: shaka.Player.isBrowserSupported() && shaka.offline.Storage.support(),
     });
+  };
 
-    setIsInit(true);
-  }, []);
+  useEffect(() => {
+    !state.isInit && init();
+  });
+
+  console.log(state);
+
+  const { isInit, isSupported } = state;
 
   if (!isInit) return <p>loading...</p>;
 
@@ -55,34 +80,31 @@ const App = () => {
       <div className="App">
         <Nav routes={routes} />
         <main className="container">
-          {!(isShakaSupported && isIndexedDbSupported) && (
-            <div className={`alert ${!isIndexedDbSupported ? 'alert-danger' : 'alert-warning'}`} role="alert">
+          {!isSupported ? (
+            <div className="alert alert-danger" role="alert">
               <h4 className="alert-heading">Browser not supported!</h4>
               <hr />
-              {!isShakaSupported && <p className="mb-0">Your Browser is not supported as it does not support the Shaka Player</p>}
-              {!isIndexedDbSupported && <p className="mb-0">IndexedDB not supported! Offline viewing is disabled.</p>}
+              Unfortunately your browser does not support all required technologies.
             </div>
+          ) : (
+            <Fragment>
+              <Route
+                component={MediaBrowser}
+                exact
+                path="/media"
+              />
+              <Route
+                component={DownloadManager}
+                exact
+                path="/downloads"
+              />
+              <Route
+                component={MediaPlayer}
+                exact
+                path="/:mode(stream|offline)/:id"
+              />
+            </Fragment>
           )}
-          <Route
-            component={() => <p>todo welcome</p>}
-            exact
-            path="/"
-          />
-          <Route
-            component={MediaBrowser}
-            exact
-            path="/media"
-          />
-          <Route
-            component={DownloadManager}
-            exact
-            path="/downloads"
-          />
-          <Route
-            component={MediaPlayer}
-            exact
-            path="/:mode(stream|offline)/:id"
-          />
         </main>
       </div>
     </Router>

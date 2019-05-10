@@ -39,12 +39,12 @@ const Nav = ({ routes }) => {
             path,
           }) => (
             <NavLink
-              key={key}
-              exact={exact}
-              to={path}
-              onClick={() => setIsOpen(false)}
-              className="nav-item nav-link"
               activeClassName="active"
+              className="nav-item nav-link"
+              exact={exact}
+              key={key}
+              onClick={() => setIsOpen(false)}
+              to={path}
             >
               {label}<span className="sr-only">(current)</span>
             </NavLink>
