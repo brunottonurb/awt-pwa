@@ -16,7 +16,7 @@ const DownloadItem = ({
     <div className="d-flex justify-content-between">
       <NavLink
         className="btn btn-primary"
-        href={`/offline/${id}`}
+        to={`/offline/${id}`}
       >Watch</NavLink>
       <button
         type="button"
