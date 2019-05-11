@@ -28,7 +28,7 @@ const App = () => {
 
   const init = async () => {
     // fetch video data
-    const data = await fetch('/data/videos.json');
+    const data = await fetch('data/videos.json');
     const dataJSON = await data.json();
 
     // init shaka
@@ -48,16 +48,19 @@ const App = () => {
     };
     window.storage.configure({ progressCallback });
 
-    // start interval that updates the state every second
-    // this is a dirty hack and I hope shaka will provide
-    // better tools in the future
-    setInterval(() => {
-      dispatch({
-        type: 'SET_IS_DOWNLOAD_IN_PROGRESS',
-        value: window.storage.getStoreInProgress(),
-      });
-    }, 1000);
+    // add event listeners for online status
+    const setOnlineStatus = (isOnline) => dispatch({ type: 'SET_IS_ONLINE', isOnline });
+    window.addEventListener('online', () => setOnlineStatus(true));
+    window.addEventListener('offline', () => setOnlineStatus(false));
 
+    // store indexedDB index in store
+    const dbIndex = await window.storage.list();
+    dispatch({
+      type: 'UPDATE_DB_INDEX',
+      dbIndex,
+    });
+
+    // start app
     return dispatch({
       type: 'INIT_DONE',
       videos: dataJSON,
@@ -69,8 +72,6 @@ const App = () => {
   useEffect(() => {
     !state.isInit && init();
   });
-
-  console.log(state);
 
   const { isInit, isSupported } = state;
 

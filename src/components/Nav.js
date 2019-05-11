@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { Store } from '../Store';
 import { NavLink } from 'react-router-dom';
 
 const Nav = ({ routes }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
-
-  const setIsOnlineTrue = () => setIsOnline(true);
-  const setIsOnlineFalse = () => setIsOnline(false);
-
-  useEffect(() => { // listen to online status
-    window.addEventListener('online', setIsOnlineTrue);
-    window.addEventListener('offline', setIsOnlineFalse);
-    return () => { // clean up on component unmount
-      window.removeEventListener("online", setIsOnlineTrue);
-      window.removeEventListener('offline', setIsOnlineFalse);
-    };
-  },[]);
+  const { state } = useContext(Store);
 
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
-      <a className="navbar-brand" href="/#/">AWT-PWA</a>
+      <NavLink
+        className="navbar-brand"
+        exact
+        to="/"
+      >
+        Shaka-O-Matik
+      </NavLink>
       <button
         className="navbar-toggler"
         type="button"
@@ -51,7 +46,7 @@ const Nav = ({ routes }) => {
           ))}
         </div>
       </div>
-      {isOnline
+      {state.isOnline
         ? <button type="button" className="btn btn-success" disabled>Online</button>
         : <button type="button" className="btn btn-danger" disabled>Offline</button>
       }

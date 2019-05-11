@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 
 export const Store = React.createContext();
+
+const initialProgress = {
+  content: null,
+  progress: 0,
+};
 
 const initialState = {
   isInit: false,
   isSupported: true,
   videos: [],
-  isDownloadInProgress: false,
-  downloadInProgress: {
-    content: null,
-    progress: 0,
-  },
+  downloadInProgress: initialProgress,
+  dbIndex: [],
+  isOnline: window.navigator.onLine,
 }
 
 const reducer = (state, action) => {
@@ -22,27 +25,20 @@ const reducer = (state, action) => {
         isSupported: action.isSupported,
         videos: action.videos,
       };
-    case 'SET_IS_DOWNLOAD_IN_PROGRESS':
-      if (state.isDownloadInProgress === action.value) return state;
-      return {
-        ...state,
-        isDownloadInProgress: action.value,
-      };
     case 'DOWNLOAD_PROGRESS':
-      return {
-        ...state,
-        downloadInProgress: {
-          content: action.content,
-          progress: action.progress,
-        },
-      }
+      const { content, progress } = action;
+      return { ...state, downloadInProgress: { content, progress } };
+    case 'UPDATE_DB_INDEX':
+      return { ...state, dbIndex: action.dbIndex };
+    case 'SET_IS_ONLINE':
+      return { ...state, isOnline: action.isOnline }
     default:
       return state;
   }
 }
 
 export const StoreProvider = ({ children }) => {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
 
   return (

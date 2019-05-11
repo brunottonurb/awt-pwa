@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
 const MediaItem = ({
   title,
@@ -22,7 +23,7 @@ const MediaItem = ({
         <p className="card-text">{tagline}</p>
         <div className="text-right">
             {allowDownload && (
-              <div className="btn-group" role="group" aria-label="Basic example">
+              <div className="btn-group" role="group">
                 <button
                   type="button"
                   className="btn btn-secondary"
@@ -30,7 +31,12 @@ const MediaItem = ({
                 >
                   Download
                 </button>
-                <a className="btn btn-primary" href={`/#/stream/${id}`} role="button">Watch now!</a>
+                <NavLink
+                  className="btn btn-primary"
+                  exact
+                  to={`/stream/${id}`}
+                  role="button"
+                >Watch now!</NavLink>
             </div>
             )}
         </div>

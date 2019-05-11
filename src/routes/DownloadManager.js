@@ -1,28 +1,40 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react';
+import React, { Fragment, useEffect, useContext, useRef } from 'react';
+import debounce from 'lodash/debounce';
 import { Store } from '../Store';
 import StorageInfo from '../components/StorageInfo';
 import DownloadItem from '../components/DownloadItem';
 import DownloadInProgress from '../components/DownloadInProgress';
 
 const DownloadManager = () => {
-  const [downloadList, setDownloadList] = useState([]);
-  const { state } = useContext(Store);
-  const { isDownloadInProgress } = state;
-  
+  const { state, dispatch } = useContext(Store);
+  const { dbIndex } = state;
+
+  const updateList = async () => {
+    const newDbIndex = await window.storage.list();
+    dispatch({ type: 'UPDATE_DB_INDEX', dbIndex: newDbIndex });
+  };
+
   useEffect(() => {
-    window.storage.list().then(setDownloadList); // get finished downloads
+    updateList();
   }, []);
 
   const removeMedia = async (offlineUri) => {
     await window.storage.remove(offlineUri);
-    window.storage.list().then(setDownloadList);
+    await updateList();
   };
 
+  const inProgress = window.storage.getStoreInProgress();
+
+  const debounced = useRef(debounce(updateList, 1000));
+  useEffect(() => { 
+    inProgress && debounced.current();
+  });
+    
   return (
     <Fragment>
       <ul className="list-group">
-        {isDownloadInProgress && <DownloadInProgress />}
-        {downloadList.map(({ appMetadata, offlineUri }, index) => ( // last one first
+        {inProgress && <DownloadInProgress />}
+        {dbIndex.map(({ appMetadata, offlineUri }, index) => ( // todo reorder with css
           <DownloadItem
             title={appMetadata.title}
             key={`download_${index}_${appMetadata.title}`}
