@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
 const DownloadItem = ({
   id,
@@ -13,11 +14,10 @@ const DownloadItem = ({
     <small>{downloadedOn}</small>
     <hr />
     <div className="d-flex justify-content-between">
-      <a
+      <NavLink
         className="btn btn-primary"
-        href={`/#/offline/${id}`}
-        role="button"
-      >Watch</a>
+        href={`/offline/${id}`}
+      >Watch</NavLink>
       <button
         type="button"
         className="btn btn-danger"
