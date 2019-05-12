@@ -3,7 +3,14 @@
     "manifestUri": "//storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd",
     "title": "Star Trek: Angel One",
     "id": "ewion",
-    "tagline": "Enjoy some classic Star Trek!!!1",
-    "poster": "//shaka-player-demo.appspot.com/assets/poster.jpg"
+    "tagline": "Enjoy some classic Star Trek!",
+    "poster": "https://static1.squarespace.com/static/51b3dc8ee4b051b96ceb10de/t/56310f21e4b033d1f5770087/1446055715088/"
+  },
+  {
+    "manifestUri": "http://dash.edgesuite.net/akamai/bbb_30fps/bbb_30fps.mpd",
+    "title": "Some video I found",
+    "id": "frefre",
+    "tagline": "I found this on the DASHjs demo page from Akamai. I don't know the title of the video.",
+    "poster": "https://i.ytimg.com/vi/kSRAbdwWm6M/maxresdefault.jpg"
   }
 ]
