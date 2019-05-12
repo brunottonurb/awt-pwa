@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useContext, useRef } from 'react';
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import debounce from 'lodash/debounce';
 import { Store } from '../Store';
 import StorageInfo from '../components/StorageInfo';
@@ -23,18 +29,38 @@ const DownloadManager = () => {
     await updateList();
   };
 
-  const inProgress = window.storage.getStoreInProgress();
+  const [downloadInProgress, setDownloadInProgress] = useState({ content: null, progress: 0 });
 
-  const debounced = useRef(debounce(updateList, 1000));
+  const handleEvent = event => {
+    setDownloadInProgress(event.detail);
+  };
+  useEffect(() => {
+    window.addEventListener('storage-progress', handleEvent);
+    return () => { // clean up when unmounting
+      window.removeEventListener('storage-progress', handleEvent);
+    };
+  }, []);
+
+  const { content, progress } = downloadInProgress;
+  const debounced = useRef(debounce(() => {
+    // todo this can happen even if the component is not mounted
+    // that is bad apparently
+    setDownloadInProgress({
+      content: null,
+      progress: 0,
+    });
+    updateList();
+  }, 1000));
   useEffect(() => { 
-    inProgress && debounced.current();
+    content && debounced.current();
   });
-    
+
   return (
     <Fragment>
       <ul className="list-group">
-        {inProgress && <DownloadInProgress />}
-        {dbIndex.map(({ appMetadata, offlineUri }, index) => ( // todo reorder with css
+        {content &&
+          <DownloadInProgress title={content.appMetadata.title} progress={progress} dateStarted={content.appMetadata.downloaded} />}
+        {dbIndex.reverse().map(({ appMetadata, offlineUri }, index) => (
           <DownloadItem
             title={appMetadata.title}
             key={`download_${index}_${appMetadata.title}`}

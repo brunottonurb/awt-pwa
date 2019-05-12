@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 const MediaItem = ({
-  title,
-  tagline,
   id,
-  poster,
   onClickDownload,
-  allowDownload,
+  poster,
+  tagline,
+  title,
 }) => (
   <div className="col-md-6" style={{ marginBottom: '1rem' }}>
     <div className="card bg-dark text-white" style={{ background: 'black' }}>
@@ -22,23 +21,21 @@ const MediaItem = ({
         <h5 className="card-title">{title}</h5>
         <p className="card-text">{tagline}</p>
         <div className="text-right">
-            {allowDownload && (
-              <div className="btn-group" role="group">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={onClickDownload}
-                >
-                  Download
-                </button>
-                <NavLink
-                  className="btn btn-primary"
-                  exact
-                  to={`/stream/${id}`}
-                  role="button"
-                >Watch now!</NavLink>
-            </div>
-            )}
+          <div className="btn-group" role="group">
+            <button
+              className="btn btn-secondary"
+              onClick={onClickDownload}
+              type="button"
+            >
+              Download
+            </button>
+            <NavLink
+              className="btn btn-primary"
+              exact
+              role="button"
+              to={`/stream/${id}`}
+            >Watch now!</NavLink>
+          </div>
         </div>
       </div>
     </div>
@@ -51,7 +48,6 @@ MediaItem.propTypes = {
   id: PropTypes.string.isRequired,
   poster: PropTypes.string.isRequired,
   onClickDownload: PropTypes.func.isRequired,
-  allowDownload: PropTypes.bool.isRequired,
 };
 
 export default MediaItem;

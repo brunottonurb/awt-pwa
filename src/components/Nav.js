@@ -1,11 +1,24 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Store } from '../Store';
 import { NavLink } from 'react-router-dom';
 
 const Nav = ({ routes }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { state } = useContext(Store);
+  const [isOnline, setIsOnline] = useState(false);
+
+  const setIsOnlineTrue = () => setIsOnline(true);
+  const setIsOnlineFalse = () => setIsOnline(false);
+
+  useEffect(() => {
+    setIsOnline(window.navigator.onLine);
+    window.addEventListener('online', setIsOnlineTrue);
+    window.addEventListener('offline', setIsOnlineFalse);
+
+    return () => {
+      window.removeEventListener('online', setIsOnlineTrue);
+      window.removeEventListener('offline', setIsOnlineFalse);
+    }
+  }, []);
 
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
@@ -46,7 +59,7 @@ const Nav = ({ routes }) => {
           ))}
         </div>
       </div>
-      {state.isOnline
+      {isOnline
         ? <button type="button" className="btn btn-success" disabled>Online</button>
         : <button type="button" className="btn btn-danger" disabled>Offline</button>
       }

@@ -2,18 +2,11 @@ import React, { useReducer } from 'react';
 
 export const Store = React.createContext();
 
-const initialProgress = {
-  content: null,
-  progress: 0,
-};
-
 const initialState = {
   isInit: false,
   isSupported: true,
   videos: [],
-  downloadInProgress: initialProgress,
   dbIndex: [],
-  isOnline: window.navigator.onLine,
 }
 
 const reducer = (state, action) => {
@@ -25,13 +18,11 @@ const reducer = (state, action) => {
         isSupported: action.isSupported,
         videos: action.videos,
       };
-    case 'DOWNLOAD_PROGRESS':
-      const { content, progress } = action;
-      return { ...state, downloadInProgress: { content, progress } };
     case 'UPDATE_DB_INDEX':
-      return { ...state, dbIndex: action.dbIndex };
-    case 'SET_IS_ONLINE':
-      return { ...state, isOnline: action.isOnline }
+      return {
+        ...state,
+        dbIndex: action.dbIndex,
+      };
     default:
       return state;
   }

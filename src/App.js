@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, Fragment } from 'react';
 import { HashRouter as Router, Route } from 'react-router-dom';
 import { Store } from './Store';
-import './App.css';
 import Nav from './components/Nav';
 import DownloadManager from './routes/DownloadManager';
 import Home from './routes/Home';
@@ -37,21 +36,11 @@ const App = () => {
 
     // initialize shaka storage
     window.storage = new shaka.offline.Storage();
+
     // make shaka dispatch progress events so that we can have a progress bar when downloading
     // this will probably no longer be necessary in the next version of shaka
-    const progressCallback = (content, progress) => {
-      dispatch({
-        type: 'DOWNLOAD_PROGRESS',
-        content,
-        progress, 
-      });
-    };
-    window.storage.configure({ progressCallback });
-
-    // add event listeners for online status
-    const setOnlineStatus = (isOnline) => dispatch({ type: 'SET_IS_ONLINE', isOnline });
-    window.addEventListener('online', () => setOnlineStatus(true));
-    window.addEventListener('offline', () => setOnlineStatus(false));
+    const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent("storage-progress", { detail: { content, progress }}));
+    window.storage.configure({ progressCallback });   
 
     // store indexedDB index in store
     const dbIndex = await window.storage.list();
@@ -81,7 +70,7 @@ const App = () => {
     <Router onUpdate={() => window.scrollTo(0, 0)}>
       <div className="App">
         <Nav routes={routes} />
-        <main className="container">
+        <main className="container" style={{ paddingTop: '4.5rem' }}>
           {!isSupported ? (
             <div className="alert alert-danger" role="alert">
               <h4 className="alert-heading">Browser not supported!</h4>

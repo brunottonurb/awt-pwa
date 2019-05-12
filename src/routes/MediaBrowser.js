@@ -41,7 +41,6 @@ const MediaBrowser = ({ history }) => {
             {...video}
             key={`media_${index}_${video.title}`}
             onClickDownload={() => downloadVideo(video.id)}
-            allowDownload={state.isOnline}
           />
         ))}
       </div>
