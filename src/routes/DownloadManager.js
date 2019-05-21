@@ -14,44 +14,46 @@ import DownloadInProgress from '../components/DownloadInProgress';
 const DownloadManager = () => {
   const { state, dispatch } = useContext(Store);
   const { dbIndex } = state;
-
-  const updateList = async () => {
-    const newDbIndex = await window.storage.list();
-    dispatch({ type: 'UPDATE_DB_INDEX', dbIndex: newDbIndex });
-  };
+  const [downloadInProgress, setDownloadInProgress] = useState({ content: null, progress: 0 });
+  const { content, progress } = downloadInProgress;
 
   useEffect(() => {
+    const updateList = async () => {
+      const newDbIndex = await window.storage.list();
+      dispatch({ type: 'UPDATE_DB_INDEX', dbIndex: newDbIndex });
+    };
     updateList();
+  }, [dispatch]);
+  
+  const handleProgressEvent = event => {
+    setDownloadInProgress(event.detail);
+  };
+  
+  useEffect(() => {
+    window.addEventListener('storage-progress', handleProgressEvent);
+    return () => { // clean up when unmounting
+      window.removeEventListener('storage-progress', handleProgressEvent);
+    };
   }, []);
 
   const removeMedia = async (offlineUri) => {
     await window.storage.remove(offlineUri);
-    await updateList();
+    const newDbIndex = await window.storage.list();
+    dispatch({ type: 'UPDATE_DB_INDEX', dbIndex: newDbIndex });
   };
-
-  const [downloadInProgress, setDownloadInProgress] = useState({ content: null, progress: 0 });
-
-  const handleEvent = event => {
-    setDownloadInProgress(event.detail);
-  };
-  useEffect(() => {
-    window.addEventListener('storage-progress', handleEvent);
-    return () => { // clean up when unmounting
-      window.removeEventListener('storage-progress', handleEvent);
-    };
-  }, []);
-
-  const { content, progress } = downloadInProgress;
-  const debounced = useRef(debounce(() => {
+  
+  const debounced = useRef(debounce(async () => {
     // todo this can happen even if the component is not mounted
-    // that is bad apparently
+    // this should reload the list of downloads after the progress updates have ceased
     setDownloadInProgress({
       content: null,
       progress: 0,
     });
-    updateList();
+    const newDbIndex = await window.storage.list();
+    dispatch({ type: 'UPDATE_DB_INDEX', dbIndex: newDbIndex });
   }, 1000));
-  useEffect(() => { 
+
+  useEffect(() => {
     content && debounced.current();
   });
 
