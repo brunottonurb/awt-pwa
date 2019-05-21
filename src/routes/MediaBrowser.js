@@ -1,11 +1,11 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { Store } from '../Store';
 import MediaItem from '../components/MediaItem';
 
 const MediaBrowser = ({ history }) => {
   const { state } = useContext(Store);
-
   const { videos, dbIndex } = state;
+  const [searchTerm, setSearchTerm] = useState('');
 
   const downloadVideo = (videoId) => {
     if (!window.storage.getStoreInProgress()) { // only one download at a time with shaka
@@ -26,17 +26,25 @@ const MediaBrowser = ({ history }) => {
 
   return (
     <Fragment>
-      {/* <form className="form-inline" style={{ paddingBottom: '1rem' }}>
-        <input className="form-control" type="text" placeholder="Search" />
-        <div className="form-check form-check-inline">
-          <input className="form-check-input" type="checkbox" value="" id="defaultCheck1" />
-          <label className="form-check-label" htmlFor="defaultCheck1">
-            Show downloaded only
-          </label>
-        </div>
-      </form> */}
+      <form className="input-group" style={{ paddingBottom: '1rem' }}>
+        <input
+          className="form-control"
+          type="text"
+          placeholder="Search"
+          onChange={e => setSearchTerm(e.target.value)}
+          value={searchTerm}
+        />
+        {searchTerm && <div className="input-group-append">
+          <button
+            className="btn btn-outline-secondary"
+            onClick={() => setSearchTerm('')}
+          >
+            Clear
+          </button>
+        </div>}
+      </form>
       <div className="row">
-        {videos.map((video, index) => (
+        {videos.filter(video => video.title.includes(searchTerm)).map((video, index) => (
           <MediaItem
             {...video}
             key={`media_${index}_${video.title}`}
