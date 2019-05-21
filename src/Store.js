@@ -17,6 +17,7 @@ const reducer = (state, action) => {
         isInit: action.isInit,
         isSupported: action.isSupported,
         videos: action.videos,
+        dbIndex: action.dbIndex,
       };
     case 'UPDATE_DB_INDEX':
       return {

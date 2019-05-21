@@ -24,12 +24,9 @@ const routes = [
 
 const App = () => { 
   const { state, dispatch } = useContext(Store);
+  const { isInit, isSupported } = state;
 
   const init = async () => {
-    // fetch video data
-    const data = await fetch('data/videos.json');
-    const dataJSON = await data.json();
-
     // init shaka
     const shaka = window.shaka;
     shaka.polyfill.installAll();
@@ -42,19 +39,21 @@ const App = () => {
     const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent("storage-progress", { detail: { content, progress }}));
     window.storage.configure({ progressCallback });   
 
-    // store indexedDB index in store
-    const dbIndex = await window.storage.list();
-    dispatch({
-      type: 'UPDATE_DB_INDEX',
-      dbIndex,
-    });
+    // get available videos from server
+    // and check offline storage (IndexedDB)
+    // simultaneously (both are async)
+    const [videoData, dbIndex] = await Promise.all([
+      fetch('data/videos.json').then(response => response.json()),
+      window.storage.list(),
+    ]);
 
     // start app
     return dispatch({
       type: 'INIT_DONE',
-      videos: dataJSON,
+      videos: videoData,
       isInit: true,
       isSupported: shaka.Player.isBrowserSupported() && shaka.offline.Storage.support(),
+      dbIndex,
     });
   };
 
@@ -62,7 +61,6 @@ const App = () => {
     !state.isInit && init();
   });
 
-  const { isInit, isSupported } = state;
 
   if (!isInit) return <p>loading...</p>;
 
