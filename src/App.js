@@ -28,32 +28,57 @@ const App = () => {
 
   const init = async () => {
     // init shaka
-    const shaka = window.shaka;
-    shaka.polyfill.installAll();
+    window.shaka.polyfill.installAll();
 
-    // initialize shaka storage
-    window.storage = new shaka.offline.Storage();
+    const isShakaPlayerSupported = window.shaka.Player.isBrowserSupported();
+    const isShakaStorageSupported = window.shaka.offline.Storage.support();
 
-    // make shaka dispatch progress events so that we can have a progress bar when downloading
-    // this will probably no longer be necessary in the next version of shaka
-    const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent("storage-progress", { detail: { content, progress }}));
-    window.storage.configure({ progressCallback });   
+    if (isShakaPlayerSupported && isShakaStorageSupported) {
+      // initialize shaka player, not attached to video element for now
+      window.player = new window.shaka.Player();
 
-    // get available videos from server
-    // and check offline storage (IndexedDB)
-    // simultaneously (both are async)
-    const [videoData, dbIndex] = await Promise.all([
-      fetch('data/videos.json').then(response => response.json()),
-      window.storage.list(),
-    ]);
+      // initialize shaka storage
+      window.storage = new window.shaka.offline.Storage();
 
-    // start app
+      // log errors
+      const onError = (error) => {
+        console.error('Error code', error.code, 'object', error);
+      };
+      window.player.addEventListener('error', ({ detail }) => onError(detail));
+
+      // make shaka dispatch progress events so that we can have a progress bar when downloading
+      const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent("storage-progress", { detail: { content, progress }}));
+      window.player.configure({
+        offline: { progressCallback },
+        preferredAudioLanguage: 'en-US',
+        preferredTextLanguage: 'en-US',
+      });
+
+      // get available videos from server
+      // and check offline storage (IndexedDB)
+      // simultaneously (both are async)
+      const [videos, dbIndex] = await Promise.all([
+        fetch('data/videos.json').then(response => response.json()),
+        window.storage.list(),
+      ]);
+
+      // start app
+      return dispatch({
+        type: 'INIT_DONE',
+        videos,
+        isInit: true,
+        isSupported: isShakaPlayerSupported && isShakaStorageSupported,
+        dbIndex,
+      });
+    }
+
+    // not supported
     return dispatch({
       type: 'INIT_DONE',
-      videos: videoData,
+      videos: [],
       isInit: true,
-      isSupported: shaka.Player.isBrowserSupported() && shaka.offline.Storage.support(),
-      dbIndex,
+      isSupported: false,
+      dbIndex: [],
     });
   };
 

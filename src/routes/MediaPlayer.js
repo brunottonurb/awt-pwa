@@ -9,24 +9,25 @@ const MediaPlayer = ({ match, history }) => {
   const metadata = videos.find((video => video.id === match.params.id)); // get id from URL, metadata from datastore
 
   useEffect(() => {
-    const player = new window.shaka.Player(videoEl.current); // initialize player on component mount
+    // make linter happy
+    const videoElement = videoEl.current;
+    // attach player to video tag
+    window.player.attach(videoElement);
 
-    const onError = (error) => { // log errors
-      console.error('Error code', error.code, 'object', error);
-    }
-
-    player.addEventListener('error', ({ detail }) => onError(detail));
     if (match.params.mode === 'stream') {
-      player.load(metadata.manifestUri).catch(onError);
+      window.player.load(metadata.manifestUri); // maybe I should catch errors here TODO
     } else { // mode === 'offline'
       // get offlineUri from storage
       window.storage.list().then((list) => {
         const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
-        player.load(offlineVideo.offlineUri); // start playing from storage
+        window.player.load(offlineVideo.offlineUri);
       });
     }
-    return () => player.destroy(); // clean up when the component is unmounted.
-  }, [match,metadata]); // run this effect only when it is first mounted or these values change
+    return () => {
+      // detach player from element when component unmounts
+      window.player.detach(videoElement);
+    };
+  }, [match, metadata]); // run this effect only when it is first mounted or these values change
 
   return (
     <div className="card bg-light">
