@@ -1,5 +1,7 @@
 import React, { useEffect, useContext, Fragment } from 'react';
 import { HashRouter as Router, Route } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import shaka from 'shaka-player';
 import { Store } from './Store';
 import Nav from './components/Nav';
 import DownloadManager from './routes/DownloadManager';
@@ -28,17 +30,17 @@ const App = () => {
 
   const init = async () => {
     // init shaka
-    window.shaka.polyfill.installAll();
+    shaka.polyfill.installAll();
 
-    const isShakaPlayerSupported = window.shaka.Player.isBrowserSupported();
-    const isShakaStorageSupported = window.shaka.offline.Storage.support();
+    const isShakaPlayerSupported = shaka.Player.isBrowserSupported();
+    const isShakaStorageSupported = shaka.offline.Storage.support();
 
     if (isShakaPlayerSupported && isShakaStorageSupported) {
       // initialize shaka player, not attached to video element for now
-      window.player = new window.shaka.Player();
+      window.player = new shaka.Player();
 
       // initialize shaka storage
-      window.storage = new window.shaka.offline.Storage();
+      window.storage = new shaka.offline.Storage();
 
       // log errors
       const onError = (error) => {
