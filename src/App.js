@@ -55,6 +55,9 @@ const App = () => {
         preferredAudioLanguage: 'en-US',
         preferredTextLanguage: 'en-US',
       });
+      // configuring offline directly is deprecated
+      // but passing the progressCallback as a player configuration does not work
+      window.storage.configure({ progressCallback });
 
       // get available videos from server
       // and check offline storage (IndexedDB)
