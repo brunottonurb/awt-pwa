@@ -8,6 +8,7 @@ import DownloadManager from './routes/DownloadManager';
 import Home from './routes/Home';
 import MediaBrowser from './routes/MediaBrowser';
 import MediaPlayer from './routes/MediaPlayer';
+import Configuration from './routes/Configuration';
 
 const routes = [
   {
@@ -22,7 +23,17 @@ const routes = [
     label: 'Downloads',
     path: '/downloads',
   },
+  {
+    exact: true,
+    key: 'configuration',
+    label: 'Configuration',
+    path: '/configuration',
+  },
 ];
+
+//default values
+ var userPreferredAudioLanguage = 'en-US';
+ var userPreferredTextLanguage = 'en-US';
 
 const App = () => { 
   const { state, dispatch } = useContext(Store);
@@ -52,8 +63,8 @@ const App = () => {
       const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent("storage-progress", { detail: { content, progress }}));
       window.player.configure({
         offline: { progressCallback },
-        preferredAudioLanguage: 'en-US',
-        preferredTextLanguage: 'en-US',
+        preferredAudioLanguage: userPreferredAudioLanguage,
+        preferredTextLanguage: userPreferredTextLanguage,
       });
       // configuring offline directly is deprecated
       // but passing the progressCallback as a player configuration does not work
@@ -126,6 +137,11 @@ const App = () => {
                 component={MediaPlayer}
                 exact
                 path="/:mode(stream|offline)/:id"
+              />
+              <Route
+                component={Configuration}
+                exact
+                path="/configuration"
               />
             </Fragment>
           )}

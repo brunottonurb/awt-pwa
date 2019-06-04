@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useContext } from 'react';
 import { Store } from '../Store';
+import App from '../App';
 
 const MediaPlayer = ({ match, history }) => {
   const videoEl = useRef(null); // reference to the <video> element
@@ -13,6 +14,15 @@ const MediaPlayer = ({ match, history }) => {
     const videoElement = videoEl.current;
     // attach player to video tag
     window.player.attach(videoElement);
+    window.player.configure({
+      preferredAudioLanguage: App.userPreferredAudioLanguage,
+      preferredTextLanguage: App.userPreferredTextLanguage,
+    });
+
+    window.storage.configure({
+      preferredAudioLanguage: App.userPreferredAudioLanguage,
+      preferredTextLanguage: App.userPreferredTextLanguage,
+    });
 
     if (match.params.mode === 'stream') {
       window.player.load(metadata.manifestUri); // maybe I should catch errors here TODO
