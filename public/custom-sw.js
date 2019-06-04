@@ -4,9 +4,8 @@ const DYNAMIC_CHACHE = 'dynamic-site-cache';
 
 // static resources
 const STATIC_CACHE_LIST = [
-  'data/videos.json', 'asset-manifest.json', 'bootstrap.min.css', 'favicon.ico',
-  'index.html', 'manifest.json', 'shaka-player.compiled.js',
-  'shaka-player.compiled.map', 'custom-sw.js', 'service-worker.js'
+  '/awt-pwa/', '/awt-pwa/data/videos.json', '/awt-pwa/manifest.json',
+  '/awt-pwa/favicon.ico'
 ];
 
 // caches static resources
