@@ -3,6 +3,7 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import shaka from 'shaka-player';
 import { Store } from './Store';
+import LoadingScreen from './components/LoadingScreen';
 import Nav from './components/Nav';
 import DownloadManager from './routes/DownloadManager';
 import Home from './routes/Home';
@@ -92,7 +93,7 @@ const App = () => {
   });
 
 
-  if (!isInit) return <p>loading...</p>;
+  if (!isInit) return <LoadingScreen />;
 
   return (
     <Router onUpdate={() => window.scrollTo(0, 0)}>
