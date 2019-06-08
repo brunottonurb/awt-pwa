@@ -3,6 +3,7 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import shaka from 'shaka-player';
 import { Store } from './Store';
+import LoadingScreen from './components/LoadingScreen';
 import Nav from './components/Nav';
 import DownloadManager from './routes/DownloadManager';
 import Home from './routes/Home';
@@ -51,7 +52,7 @@ const App = () => {
       window.player = new shaka.Player();
 
       // initialize shaka storage
-      window.storage = new shaka.offline.Storage();
+      window.storage = new shaka.offline.Storage(window.player);
 
       // log errors
       const onError = (error) => {
@@ -66,9 +67,6 @@ const App = () => {
         preferredAudioLanguage: userPreferredAudioLanguage,
         preferredTextLanguage: userPreferredTextLanguage,
       });
-      // configuring offline directly is deprecated
-      // but passing the progressCallback as a player configuration does not work
-      window.storage.configure({ progressCallback });
 
       // get available videos from server
       // and check offline storage (IndexedDB)
@@ -103,7 +101,7 @@ const App = () => {
   });
 
 
-  if (!isInit) return <p>loading...</p>;
+  if (!isInit) return <LoadingScreen />;
 
   return (
     <Router onUpdate={() => window.scrollTo(0, 0)}>
