@@ -1,8 +1,8 @@
 import React from "react";
 
 const LoadingScreen = () => (
-  <div class="container" style={{ height: '100vh' }}>
-    <div class="row h-100 justify-content-center align-items-center">
+  <div className="container" style={{ height: '100vh' }}>
+    <div className="row h-100 justify-content-center align-items-center">
       <div className="spinner-grow" role="status">
         <span className="sr-only">Loading...</span>
       </div>
