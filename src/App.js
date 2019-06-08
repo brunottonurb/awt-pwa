@@ -41,7 +41,7 @@ const App = () => {
       window.player = new shaka.Player();
 
       // initialize shaka storage
-      window.storage = new shaka.offline.Storage();
+      window.storage = new shaka.offline.Storage(window.player);
 
       // log errors
       const onError = (error) => {
@@ -56,9 +56,6 @@ const App = () => {
         preferredAudioLanguage: 'en-US',
         preferredTextLanguage: 'en-US',
       });
-      // configuring offline directly is deprecated
-      // but passing the progressCallback as a player configuration does not work
-      window.storage.configure({ progressCallback });
 
       // get available videos from server
       // and check offline storage (IndexedDB)
