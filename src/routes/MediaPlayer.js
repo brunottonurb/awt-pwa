@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useContext } from 'react';
 import { Store } from '../Store';
 import App from '../App';
+import Cookies from 'universal-cookie';
 
 const MediaPlayer = ({ match, history }) => {
   const videoEl = useRef(null); // reference to the <video> element
@@ -10,18 +11,20 @@ const MediaPlayer = ({ match, history }) => {
   const metadata = videos.find((video => video.id === match.params.id)); // get id from URL, metadata from datastore
 
   useEffect(() => {
+    
+  const cookies = new Cookies();
     // make linter happy
     const videoElement = videoEl.current;
     // attach player to video tag
     window.player.attach(videoElement);
     window.player.configure({
-      preferredAudioLanguage: App.userPreferredAudioLanguage,
-      preferredTextLanguage: App.userPreferredTextLanguage,
+      preferredAudioLanguage: cookies.get('userPreferredAudioLanguage'),
+      preferredTextLanguage: cookies.get('userPreferredTextLanguage'),
     });
 
     window.storage.configure({
-      preferredAudioLanguage: App.userPreferredAudioLanguage,
-      preferredTextLanguage: App.userPreferredTextLanguage,
+      preferredAudioLanguage: cookies.get('userPreferredAudioLanguage'),
+      preferredTextLanguage: cookies.get('userPreferredTextLanguage'),
     });
 
     if (match.params.mode === 'stream') {
