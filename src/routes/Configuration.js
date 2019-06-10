@@ -15,7 +15,13 @@ const languageOptions = [
     id: 'fra',
   },
 ];
-const subtitleOptions = languageOptions; // same for now, but maybe add more
+const subtitleOptions = [
+  ...languageOptions,
+  {
+    label: 'None',
+    id: '',
+  },
+];
 
 const Configuration = () => {
   const { state, dispatch } = useContext(Store);
