@@ -17,7 +17,7 @@ const Nav = ({ routes }) => {
     return () => {
       window.removeEventListener('online', setIsOnlineTrue);
       window.removeEventListener('offline', setIsOnlineFalse);
-    }
+    };
   }, []);
 
   return (

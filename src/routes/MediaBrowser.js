@@ -3,19 +3,24 @@ import { Store } from '../Store';
 import MediaItem from '../components/MediaItem';
 
 const MediaBrowser = ({ history }) => {
-  const { state } = useContext(Store);
-  const { videos, dbIndex } = state;
+  const {
+    state: {
+      dbIndex,
+      storage,
+      videos,
+    },
+   } = useContext(Store);
   const [searchTerm, setSearchTerm] = useState('');
 
   const downloadVideo = (videoId) => {
-    if (!window.storage.getStoreInProgress()) { // only one download at a time with shaka
+    if (!storage.getStoreInProgress()) { // only one download at a time with shaka
       if (dbIndex.find(v => v.appMetadata.id === videoId)) { // check if already in storage
         if (!window.confirm('Are you sure you want download this again?')) {
           return;
         }
       }
       const video = videos.find(v => v.id === videoId);
-      window.storage.store(video.manifestUri, {
+      storage.store(video.manifestUri, {
         downloaded: Date(),
         id: video.id,
         title: video.title,

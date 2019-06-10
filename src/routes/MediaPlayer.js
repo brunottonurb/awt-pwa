@@ -1,46 +1,38 @@
 import React, { useEffect, useRef, useContext } from 'react';
 import { Store } from '../Store';
-import App from '../App';
-import Cookies from 'universal-cookie';
 
 const MediaPlayer = ({ match, history }) => {
   const videoEl = useRef(null); // reference to the <video> element
 
-  const { state } = useContext(Store);
-  const { videos } = state;
+  const {
+    state: {
+      player,
+      storage,
+      videos,
+    },
+  } = useContext(Store);
   const metadata = videos.find((video => video.id === match.params.id)); // get id from URL, metadata from datastore
 
   useEffect(() => {
-    
-  const cookies = new Cookies();
     // make linter happy
     const videoElement = videoEl.current;
     // attach player to video tag
-    window.player.attach(videoElement);
-    window.player.configure({
-      preferredAudioLanguage: cookies.get('userPreferredAudioLanguage'),
-      preferredTextLanguage: cookies.get('userPreferredTextLanguage'),
-    });
-
-    window.storage.configure({
-      preferredAudioLanguage: cookies.get('userPreferredAudioLanguage'),
-      preferredTextLanguage: cookies.get('userPreferredTextLanguage'),
-    });
+    player.attach(videoElement);
 
     if (match.params.mode === 'stream') {
-      window.player.load(metadata.manifestUri); // maybe I should catch errors here TODO
+      player.load(metadata.manifestUri); // maybe I should catch errors here TODO
     } else { // mode === 'offline'
       // get offlineUri from storage
-      window.storage.list().then((list) => {
+      storage.list().then((list) => {
         const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
-        window.player.load(offlineVideo.offlineUri);
+        player.load(offlineVideo.offlineUri);
       });
     }
     return () => {
       // detach player from element when component unmounts
-      window.player.detach(videoElement);
+      player.detach(videoElement);
     };
-  }, [match, metadata]); // run this effect only when it is first mounted or these values change
+  }, [match, metadata, player, storage]); // run this effect only when it is first mounted or these values change
 
   return (
     <div className="card bg-light">

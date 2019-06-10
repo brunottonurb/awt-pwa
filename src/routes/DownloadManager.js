@@ -12,18 +12,17 @@ import DownloadItem from '../components/DownloadItem';
 import DownloadInProgress from '../components/DownloadInProgress';
 
 const DownloadManager = () => {
-  const { state, dispatch } = useContext(Store);
-  const { dbIndex } = state;
-  const [downloadInProgress, setDownloadInProgress] = useState({ content: null, progress: 0 });
-  const { content, progress } = downloadInProgress;
+  const { state: { dbIndex, storage }, dispatch } = useContext(Store);
+  const [{ content, progress }, setDownloadInProgress] = useState({ content: null, progress: 0 });
 
   useEffect(() => {
+    if (!storage) return;
     const updateList = async () => {
-      const newDbIndex = await window.storage.list();
-      dispatch({ type: 'UPDATE_DB_INDEX', dbIndex: newDbIndex });
+      const newDbIndex = await storage.list();
+      dispatch({ type: 'UPDATE_DB_INDEX', payload: { dbIndex: newDbIndex } });
     };
     updateList();
-  }, [dispatch]);
+  }, [dispatch, storage]);
   
   const handleProgressEvent = event => {
     setDownloadInProgress(event.detail);
@@ -37,9 +36,9 @@ const DownloadManager = () => {
   }, []);
 
   const removeMedia = async (offlineUri) => {
-    await window.storage.remove(offlineUri);
-    const newDbIndex = await window.storage.list();
-    dispatch({ type: 'UPDATE_DB_INDEX', dbIndex: newDbIndex });
+    await storage.remove(offlineUri);
+    const newDbIndex = await storage.list();
+    dispatch({ type: 'UPDATE_DB_INDEX', payload: { dbIndex: newDbIndex } });
   };
   
   const debounced = useRef(debounce(async () => {
@@ -49,8 +48,8 @@ const DownloadManager = () => {
       content: null,
       progress: 0,
     });
-    const newDbIndex = await window.storage.list();
-    dispatch({ type: 'UPDATE_DB_INDEX', dbIndex: newDbIndex });
+    const newDbIndex = await storage.list();
+    dispatch({ type: 'UPDATE_DB_INDEX', payload: { dbIndex: newDbIndex } });
   }, 1000));
 
   useEffect(() => {

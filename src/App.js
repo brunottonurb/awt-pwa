@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, Fragment } from 'react';
 import { HashRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import shaka from 'shaka-player';
 import { Store } from './Store';
 import LoadingScreen from './components/LoadingScreen';
 import Nav from './components/Nav';
@@ -32,74 +31,12 @@ const routes = [
   },
 ];
 
-//default values
- var userPreferredAudioLanguage = 'en-US';
- var userPreferredTextLanguage = 'en-US';
-
 const App = () => { 
-  const { state, dispatch } = useContext(Store);
-  const { isInit, isSupported } = state;
-
-  const init = async () => {
-    // init shaka
-    shaka.polyfill.installAll();
-
-    const isShakaPlayerSupported = shaka.Player.isBrowserSupported();
-    const isShakaStorageSupported = shaka.offline.Storage.support();
-
-    if (isShakaPlayerSupported && isShakaStorageSupported) {
-      // initialize shaka player, not attached to video element for now
-      window.player = new shaka.Player();
-
-      // initialize shaka storage
-      window.storage = new shaka.offline.Storage(window.player);
-
-      // log errors
-      const onError = (error) => {
-        console.error('Error code', error.code, 'object', error);
-      };
-      window.player.addEventListener('error', ({ detail }) => onError(detail));
-
-      // make shaka dispatch progress events so that we can have a progress bar when downloading
-      const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent("storage-progress", { detail: { content, progress }}));
-      window.player.configure({
-        offline: { progressCallback },
-        preferredAudioLanguage: userPreferredAudioLanguage,
-        preferredTextLanguage: userPreferredTextLanguage,
-      });
-
-      // get available videos from server
-      // and check offline storage (IndexedDB)
-      // simultaneously (both are async)
-      const [videos, dbIndex] = await Promise.all([
-        fetch('data/videos.json').then(response => response.json()),
-        window.storage.list(),
-      ]);
-
-      // start app
-      return dispatch({
-        type: 'INIT_DONE',
-        videos,
-        isInit: true,
-        isSupported: isShakaPlayerSupported && isShakaStorageSupported,
-        dbIndex,
-      });
-    }
-
-    // not supported
-    return dispatch({
-      type: 'INIT_DONE',
-      videos: [],
-      isInit: true,
-      isSupported: false,
-      dbIndex: [],
-    });
-  };
+  const { state: { isInit, isSupported }, dispatch } = useContext(Store);
 
   useEffect(() => {
-    !state.isInit && init();
+    !isInit && dispatch({ type: 'INIT', dispatch });
   });
-
 
   if (!isInit) return <LoadingScreen />;
 
