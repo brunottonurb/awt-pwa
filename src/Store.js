@@ -7,6 +7,7 @@ const cookies = new Cookies();
 const initialConfiguration = {
   language: null,
   subtitles: null,
+  quality: null,
 };
 const initialState = {
   configuration: initialConfiguration,
@@ -40,11 +41,30 @@ const init = async (dispatch) => {
     const configuration = {
       language: cookies.get('userPreferredAudioLanguage'),
       subtitles: cookies.get('userPreferredTextLanguage'),
+      quality: cookies.get('PreferredVideoQuality'),
     };
+
+    const trackSelectionCallback = (tracks) => {
+      // This example stores the highest bandwidth variant.
+      //
+      // Note that this is just an example of an arbitrary algorithm, and not a best
+      // practice for storing content offline. Decide what your app needs, or keep
+      // the default (user-pref-matching audio, best SD video, all text).
+      
+      const found = tracks
+        .filter(track => track.type === 'variant')
+        .sort((a, b) => a.bandwidth - b.bandwidth);
+      console.log(found);
+      return [found.pop()];
+    }
+
     // make shaka dispatch progress events so that we can have a progress bar when downloading
     const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent("storage-progress", { detail: { content, progress }}));
     player.configure({
-      offline: { progressCallback },
+      offline: {
+        progressCallback,
+        trackSelectionCallback,
+      },
       preferredAudioLanguage: configuration.language,
       preferredTextLanguage: configuration.subtitles,
     });
