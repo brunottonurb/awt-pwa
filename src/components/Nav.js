@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 const Nav = ({ routes }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
-
+  const node = useRef();
   const setIsOnlineTrue = () => setIsOnline(true);
   const setIsOnlineFalse = () => setIsOnline(false);
 
@@ -19,6 +19,24 @@ const Nav = ({ routes }) => {
       window.removeEventListener('offline', setIsOnlineFalse);
     };
   }, []);
+
+  const handleClickOutside = e => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setIsOpen(false);
+  };
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
@@ -38,7 +56,10 @@ const Nav = ({ routes }) => {
       >
         <span className="navbar-toggler-icon"></span>
       </button>
-      <div className={`collapse navbar-collapse ${isOpen ? 'show': ''}`}>
+      <div
+        className={`collapse navbar-collapse ${isOpen ? 'show': ''}`}
+        ref={node}
+      >
         <div className="navbar-nav">
           {routes.map(({
             exact,
