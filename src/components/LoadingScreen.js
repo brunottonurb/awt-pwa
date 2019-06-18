@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const LoadingScreen = () => (
   <div className="container" style={{ height: '100vh' }}>

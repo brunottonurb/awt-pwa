@@ -5,9 +5,9 @@ import shaka from 'shaka-player';
 export const Store = React.createContext();
 const cookies = new Cookies();
 const initialConfiguration = {
-  language: null,
-  subtitles: null,
-  quality: null,
+  language: 'en-US',
+  subtitles: 'en-US',
+  quality: 480,
 };
 const initialState = {
   configuration: initialConfiguration,
@@ -37,29 +37,38 @@ const init = async (dispatch) => {
     };
     player.addEventListener('error', ({ detail }) => onError(detail));
 
+    const qualityValue = cookies.get('userPreferredQuality');
+
     // get previous configuration from cookies
     const configuration = {
-      language: cookies.get('userPreferredAudioLanguage'),
-      subtitles: cookies.get('userPreferredTextLanguage'),
-      quality: cookies.get('PreferredVideoQuality'),
+      language: cookies.get('userPreferredAudioLanguage') || initialConfiguration.language,
+      subtitles: cookies.get('userPreferredTextLanguage') || initialConfiguration.subtitles,
+      quality: qualityValue ? parseInt(qualityValue) : initialConfiguration.quality,
     };
 
     const trackSelectionCallback = (tracks) => {
-      // This example stores the highest bandwidth variant.
-      //
-      // Note that this is just an example of an arbitrary algorithm, and not a best
-      // practice for storing content offline. Decide what your app needs, or keep
-      // the default (user-pref-matching audio, best SD video, all text).
+      // HACK: TODO MAYBE: no idea how to access the state inside this function, so I'll just use the cookie
+      // I would prefer to access the state
+      const quality = parseInt(cookies.get('userPreferredQuality'));
+      const language = cookies.get('userPreferredLanguage');
+
+      const videoWithAudio = tracks
+        .filter(track => track.type === 'variant' && track.height <= quality) // choose all qualities smaller than the preferrence
+        .sort((a, b) => a.bandwidth - b.bandwidth); // qualities are now sorted from worst to best
+
+      const videoWithCorrectLanguage = videoWithAudio.filter(track => track.language === language);
+
+      const subtitles = tracks.filter(track => track.type === 'text');
       
-      const found = tracks
-        .filter(track => track.type === 'variant')
-        .sort((a, b) => a.bandwidth - b.bandwidth);
-      console.log(found);
-      return [found.pop()];
+      console.log(subtitles, videoWithCorrectLanguage.length > 0 ? videoWithCorrectLanguage.pop() : videoWithAudio.pop());
+      return [
+        ...subtitles,
+        videoWithCorrectLanguage.length > 0 ? videoWithCorrectLanguage.pop() : videoWithAudio.pop() // choose english when preferrence is not available
+      ];
     }
 
     // make shaka dispatch progress events so that we can have a progress bar when downloading
-    const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent("storage-progress", { detail: { content, progress }}));
+    const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent('storage-progress', { detail: { content, progress }}));
     player.configure({
       offline: {
         progressCallback,
@@ -136,12 +145,21 @@ const reducer = (state, { type, payload, dispatch }) => {
       };
     case 'SET_CONFIG_SUBTITLES':
       cookies.set('userPreferredTextLanguage', payload, { path: '/' });
-      state.player.configure({ preferredTextLanguage: payload });
+      state.player.configure({ preferredTextLanguage: payload === 'none' ? '' : payload });
       return {
         ...state,
         configuration: {
           ...state.configuration,
           subtitles: payload,
+        },
+      };
+    case 'SET_CONFIG_QUALITY':
+      cookies.set('userPreferredQuality', payload, { path: '/' });
+      return {
+        ...state,
+        configuration: {
+          ...state.configuration,
+          quality: payload,
         },
       };
     default:

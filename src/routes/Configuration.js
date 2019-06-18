@@ -19,7 +19,7 @@ const subtitleOptions = [
   ...languageOptions,
   {
     label: 'None',
-    id: '',
+    id: 'none',
   },
 ];
 
@@ -83,22 +83,22 @@ const Configuration = () => {
             <div className="row">
               <legend className="col-form-label col-sm-2 pt-0">Preferred Video Quality</legend>
               <div className="col">
-                {[{ label: 'High Definition', id: 'hd' }, { label: 'Standard Definition', id: 'sd' }].map(({ label, id }) => (
-                  <div className="form-check" key={`key_quality_${id}`}>
+                {[1080, 720, 480].map(q => (
+                  <div className="form-check" key={`key_quality_${q}`}>
                     <input
                       className="form-check-input"
                       type="radio"
                       name="qualityRadios"
-                      id={`quality_${id}`}
-                      value={id}
-                      checked={id === configuration.quality}
+                      id={`quality_${q}`}
+                      value={q}
+                      checked={q === configuration.quality}
                       onChange={e => dispatch({
                         type: 'SET_CONFIG_QUALITY',
-                        payload: e.target.value,
+                        payload: parseInt(e.target.value),
                       })}
                       />
-                    <label className="form-check-label" htmlFor={`quality_${id}`}>
-                      {label}
+                    <label className="form-check-label" htmlFor={`quality_${q}`}>
+                      {q}
                     </label>
                   </div>
                 ))}

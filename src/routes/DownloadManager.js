@@ -36,6 +36,7 @@ const DownloadManager = () => {
   }, []);
 
   const removeMedia = async (offlineUri) => {
+    // TODO deleting while a download is in progress messes up the progress bar. thanks shaka
     await storage.remove(offlineUri);
     const newDbIndex = await storage.list();
     dispatch({ type: 'UPDATE_DB_INDEX', payload: { dbIndex: newDbIndex } });

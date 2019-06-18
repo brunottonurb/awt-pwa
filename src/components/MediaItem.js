@@ -10,15 +10,15 @@ const MediaItem = ({
   title,
 }) => {
   const node = useRef();
-  const [showDownloadOptions, setShowDownloadOptions] = useState(false);
+  const [isDownloadOptionsOpen, setIsDownloadOptionsOpen] = useState(false);
   const handleClickOutside = e => {
     if (node.current.contains(e.target)) {
       return;
     }
-    setShowDownloadOptions(false);
+    setIsDownloadOptionsOpen(false);
   };
   useEffect(() => {
-    if (showDownloadOptions) {
+    if (isDownloadOptionsOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -27,15 +27,15 @@ const MediaItem = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showDownloadOptions]);
+  }, [isDownloadOptionsOpen]);
 
   return(
     <div className="col-md-6" style={{ marginBottom: '1rem' }}>
       <div className="card bg-dark text-white" style={{ background: 'black' }}>
         <img
+          alt={`image_${title}`}
           className="card-img-top"
           src={poster}
-          alt={`image_${title}`}
           style={{ minHeight: '10rem', opacity: '0.4', borderRadius: '.25rem' }}
         />
         <div className="card-img-overlay d-flex justify-content-between flex-column">
@@ -47,6 +47,7 @@ const MediaItem = ({
                 className="btn btn-secondary"
                 onClick={onClickDownload}
                 type="button"
+                title="Download with default configuration"
               >
                 Download
               </button>
@@ -56,55 +57,59 @@ const MediaItem = ({
                 className="btn btn-secondary dropdown-toggle dropdown-toggle-split"
                 data-toggle="dropdown"
                 id={`dropdown_download_options-${id}`}
-                onClick={() => setShowDownloadOptions(true)}
+                onClick={() => setIsDownloadOptionsOpen(true)}
                 type="button"
+                title="Download with custom configuration"
               >
                 <span className="sr-only">Toggle Download Options Dropdown</span>
               </button>
               <div
                 aria-labelledby={`dropdown_download_options-${id}`}
-                className={`dropdown-menu dropdown-menu-right"${showDownloadOptions ? ' show' : ''} w-100`}
+                className={`dropdown-menu dropdown-menu-right"${isDownloadOptionsOpen ? ' show' : ''}`}
                 ref={node}
               >
-                <form className="px-4 py-3">
-                  <div className="form-group">
-                    <label htmlFor={`dropdown_download_options-${id}-language`}>Example label</label>
+                <form className="px-4">
+                  <div className="form-group row">
+                    <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-language`}>Example label</label>
                     <select
                       className="custom-select custom-select-sm"
+                      defaultValue="0"
                       id={`dropdown_download_options-${id}-language`}
                     >
-                      <option selected>Default</option>
+                      <option value="0">Default</option>
                       <option value="1">TODO</option>
                       <option value="2">get</option>
                       <option value="3">options</option>
                     </select>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor={`dropdown_download_options-${id}-subtitles`}>Example label</label>
+                  <div className="form-group row">
+                    <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-subtitles`}>Example label</label>
                     <select
                       className="custom-select custom-select-sm"
+                      defaultValue="0"
                       id={`dropdown_download_options-${id}-subtitles`}
                     >
-                      <option selected>Default</option>
+                      <option value="0">Default</option>
                       <option value="1">TODO</option>
                       <option value="2">get</option>
                       <option value="3">options</option>
                     </select>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor={`dropdown_download_options-${id}-quality`}>Example label</label>
+                  <div className="form-group row">
+                    <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-quality`}>Example label</label>
                     <select
                       className="custom-select custom-select-sm"
+                      defaultValue="0"
                       id={`dropdown_download_options-${id}-quality`}
                     >
-                      <option selected>Quality</option>
+                      <option value="0">Default</option>
                       <option value="1">TODO</option>
                       <option value="2">GET</option>
                       <option value="3">options</option>
                     </select>
                   </div>
                   <button
-                    className="btn btn-secondary"
+                    className="btn btn-secondary btn-sm"
                     onClick={onClickDownload /* TODO pass params */}
                     type="button"
                   >
@@ -133,11 +138,11 @@ const MediaItem = ({
 };
 
 MediaItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  tagline: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  poster: PropTypes.string.isRequired,
   onClickDownload: PropTypes.func.isRequired,
+  poster: PropTypes.string.isRequired,
+  tagline: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default MediaItem;
