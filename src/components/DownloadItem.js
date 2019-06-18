@@ -6,12 +6,21 @@ const DownloadItem = ({
   id,
   removeMedia,
   title,
-  downloadedOn
+  downloadedOn,
+  language,
+  subtitles,
+  quality,
 }) => (
   <li className="list-group-item">
     {title}
     <br />
-    <small>{downloadedOn}</small>
+    <small>downloaded on: {downloadedOn}</small>
+    <br />
+    <small>language: {language}</small>
+    <br />
+    <small>subtitles: {subtitles}</small>
+    <br /> 
+    <small>quality: {quality}p</small>
     <hr />
     <div className="d-flex justify-content-between">
       <NavLink

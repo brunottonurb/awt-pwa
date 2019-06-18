@@ -62,16 +62,23 @@ const DownloadManager = () => {
       <ul className="list-group">
         {content &&
           <DownloadInProgress title={content.appMetadata.title} progress={progress} dateStarted={content.appMetadata.downloaded} />}
-        {dbIndex.reverse().map(({ appMetadata, offlineUri }, index) => (
-          <DownloadItem
-            title={appMetadata.title}
-            key={`download_${index}_${appMetadata.title}`}
-            done
-            id={appMetadata.id}
-            removeMedia={() => removeMedia(offlineUri)}
-            downloadedOn={appMetadata.downloaded}
-          />
-        ))}
+        {dbIndex.reverse().map(({ appMetadata, offlineUri, tracks }, index) => {
+          const mainTrack = tracks.find(track => track.type === 'variant');
+          const subTrack = tracks.find(track => track.type === 'text');
+
+          return (
+            <DownloadItem
+              title={appMetadata.title}
+              key={`download_${index}_${appMetadata.title}`}
+              done
+              id={appMetadata.id}
+              removeMedia={() => removeMedia(offlineUri)}
+              downloadedOn={appMetadata.downloaded}
+              language={mainTrack.language}
+              subtitles={subTrack ? subTrack.language : 'None'}
+              quality={mainTrack.height}
+            />
+          )})}
       </ul>
       <StorageInfo max={2000} current={500} />
     </Fragment>

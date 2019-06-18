@@ -4,15 +4,15 @@ import { Store } from '../Store';
 const languageOptions = [
   {
     label: 'English',
-    id: 'en-US',
+    id: 'en',
   },
   {
     label: 'Deutsch',
-    id: 'ger',
+    id: 'de',
   },
   {
     label: 'Français',
-    id: 'fra',
+    id: 'fr',
   },
 ];
 const subtitleOptions = [

@@ -8,9 +8,15 @@ const MediaItem = ({
   poster,
   tagline,
   title,
+  languages,
+  qualities,
+  subtitles,
 }) => {
   const node = useRef();
   const [isDownloadOptionsOpen, setIsDownloadOptionsOpen] = useState(false);
+  const [customLanguage, setCustomLanguage] = useState(languages[0]);
+  const [customSubtitles, setCustomSubtitles] = useState(!subtitles.length ? '' : subtitles[0]);
+  const [customQuality, setCustomQuality] = useState(qualities[0]);
   const handleClickOutside = e => {
     if (node.current.contains(e.target)) {
       return;
@@ -70,58 +76,58 @@ const MediaItem = ({
               >
                 <form className="px-4">
                   <div className="form-group row">
-                    <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-language`}>Example label</label>
+                    <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-language`}>Language</label>
                     <select
                       className="custom-select custom-select-sm"
-                      defaultValue="0"
+                      defaultValue={customLanguage || ''}
                       id={`dropdown_download_options-${id}-language`}
+                      onChange={e => setCustomLanguage(e.target.value)}
                     >
-                      <option value="0">Default</option>
-                      <option value="1">TODO</option>
-                      <option value="2">get</option>
-                      <option value="3">options</option>
+                      {languages.map((language, index) => <option key={`dropdown_download_options-${id}-language-${index}`} value={language}>{language}</option>)}
                     </select>
                   </div>
+                  {subtitles.length ? (
+                    <div className="form-group row">
+                      <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-subtitles`}>Subtitles</label>
+                      <select
+                        className="custom-select custom-select-sm"
+                        value={customSubtitles || ''}
+                        id={`dropdown_download_options-${id}-subtitles`}
+                        onChange={e => setCustomSubtitles(e.target.value)}
+                      >
+                        {subtitles.map((subtitle, index) => <option key={`dropdown_download_options-${id}-subtitles-${index}`} value={subtitle}>{subtitle}</option>)}
+                        <option value="none">None</option>
+                      </select>
+                    </div>
+                  ) : (
+                    <p>TODO</p>
+                  )}
                   <div className="form-group row">
-                    <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-subtitles`}>Example label</label>
+                    <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-quality`}>Quality</label>
                     <select
                       className="custom-select custom-select-sm"
-                      defaultValue="0"
-                      id={`dropdown_download_options-${id}-subtitles`}
-                    >
-                      <option value="0">Default</option>
-                      <option value="1">TODO</option>
-                      <option value="2">get</option>
-                      <option value="3">options</option>
-                    </select>
-                  </div>
-                  <div className="form-group row">
-                    <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-quality`}>Example label</label>
-                    <select
-                      className="custom-select custom-select-sm"
-                      defaultValue="0"
+                      defaultValue={customQuality || ''}
                       id={`dropdown_download_options-${id}-quality`}
+                      onChange={e => setCustomQuality(e.target.value)}
                     >
-                      <option value="0">Default</option>
-                      <option value="1">TODO</option>
-                      <option value="2">GET</option>
-                      <option value="3">options</option>
+                      {qualities.map((quality, index) => <option key={`dropdown_download_options-${id}-quality-${index}`} value={quality}>{quality}p</option>)}
                     </select>
                   </div>
                   <button
                     className="btn btn-secondary btn-sm"
-                    onClick={onClickDownload /* TODO pass params */}
+                    onClick={() => {
+                      window.customConfig = {
+                        language: customLanguage,
+                        subtitles: customSubtitles,
+                        quality: customQuality,
+                      }
+                      onClickDownload();
+                     }}
                     type="button"
                   >
                     Download
                   </button>
                 </form>
-                <div className="dropdown-divider" />
-                <NavLink
-                  className="dropdown-item"
-                  exact
-                  to="/configuration"
-                >Change Defaults</NavLink>
               </div>
             </div>
             <NavLink

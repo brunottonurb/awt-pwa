@@ -5,7 +5,7 @@ const DownloadInProgress = ({ title, dateStarted, progress }) => (
   <li className="list-group-item">
     {title}
     <br />
-    <small>{dateStarted}</small>
+    <small>started: {dateStarted}</small>
     <hr />
     <div className="progress" style={{ marginBottom: '0.5rem' }}>
       <div

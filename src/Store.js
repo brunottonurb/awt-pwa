@@ -5,8 +5,8 @@ import shaka from 'shaka-player';
 export const Store = React.createContext();
 const cookies = new Cookies();
 const initialConfiguration = {
-  language: 'en-US',
-  subtitles: 'en-US',
+  language: 'en',
+  subtitles: 'en',
   quality: 480,
 };
 const initialState = {
@@ -49,20 +49,32 @@ const init = async (dispatch) => {
     const trackSelectionCallback = (tracks) => {
       // HACK: TODO MAYBE: no idea how to access the state inside this function, so I'll just use the cookie
       // I would prefer to access the state
-      const quality = parseInt(cookies.get('userPreferredQuality'));
-      const language = cookies.get('userPreferredLanguage');
+      let quality = parseInt(cookies.get('userPreferredQuality'));
+      let language = cookies.get('userPreferredAudioLanguage');
+      let subtitles = cookies.get('userPreferredTextLanguage');
+
+      if (!!window.customConfig) {
+        quality = window.customConfig.quality;
+        language = window.customConfig.language;
+        subtitles = window.customConfig.subtitles;
+
+        window.customConfig = null;
+      }
+
+      console.log(quality, language, subtitles);
 
       const videoWithAudio = tracks
-        .filter(track => track.type === 'variant' && track.height <= quality) // choose all qualities smaller than the preferrence
-        .sort((a, b) => a.bandwidth - b.bandwidth); // qualities are now sorted from worst to best
-
-      const videoWithCorrectLanguage = videoWithAudio.filter(track => track.language === language);
-
-      const subtitles = tracks.filter(track => track.type === 'text');
+        .sort((a, b) => a.height - b.height) // qualities are now sorted from worst to best
+        .filter(track => track.type === 'variant' && track.height <= quality); // choose all qualities smaller than the preferrence
       
-      console.log(subtitles, videoWithCorrectLanguage.length > 0 ? videoWithCorrectLanguage.pop() : videoWithAudio.pop());
+      const videoWithCorrectLanguage = videoWithAudio.filter(track => track.language === language);
+      console.log(videoWithCorrectLanguage);
+
+      const subtitlesTracks = tracks.filter(track => track.type === 'text').filter(track => track.language === subtitles);
+      console.log(subtitlesTracks);
+
       return [
-        ...subtitles,
+        ...subtitlesTracks,
         videoWithCorrectLanguage.length > 0 ? videoWithCorrectLanguage.pop() : videoWithAudio.pop() // choose english when preferrence is not available
       ];
     }
