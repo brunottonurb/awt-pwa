@@ -4,38 +4,28 @@ import { Store } from '../Store';
 const languageOptions = [
   {
     label: 'English',
-    id: 'en-US',
+    id: 'en',
   },
   {
     label: 'Deutsch',
-    id: 'ger',
+    id: 'de',
   },
   {
     label: 'Français',
-    id: 'fra',
+    id: 'fr',
   },
 ];
 const subtitleOptions = [
   ...languageOptions,
   {
     label: 'None',
-    id: '',
+    id: 'none',
   },
 ];
 
 const Configuration = () => {
   const { state, dispatch } = useContext(Store);
   const { configuration } = state;
-
-  // const updateRadios = (update, value) => {
-  //   if (update === "audio") {
-  //     cookies.set('userPreferredAudioLanguage', value, { path: '/' });
-  //     setAudio(value);
-  //   } else if (update === "subtitle") {
-  //     cookies.set('userPreferredTextLanguage', value, { path: '/' });
-  //     setSubtitle(value);
-  //   }
-  // };
 
   return (
     <div className="form-check">
@@ -85,6 +75,30 @@ const Configuration = () => {
                       />
                     <label className="form-check-label" htmlFor={`subtitles_${id}`}>
                       {label}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="row">
+              <legend className="col-form-label col-sm-2 pt-0">Preferred Video Quality</legend>
+              <div className="col">
+                {[1080, 720, 480].map(q => (
+                  <div className="form-check" key={`key_quality_${q}`}>
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="qualityRadios"
+                      id={`quality_${q}`}
+                      value={q}
+                      checked={q === configuration.quality}
+                      onChange={e => dispatch({
+                        type: 'SET_CONFIG_QUALITY',
+                        payload: parseInt(e.target.value),
+                      })}
+                      />
+                    <label className="form-check-label" htmlFor={`quality_${q}`}>
+                      {q}
                     </label>
                   </div>
                 ))}

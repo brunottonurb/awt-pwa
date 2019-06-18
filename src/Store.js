@@ -5,8 +5,9 @@ import shaka from 'shaka-player';
 export const Store = React.createContext();
 const cookies = new Cookies();
 const initialConfiguration = {
-  language: null,
-  subtitles: null,
+  language: 'en',
+  subtitles: 'en',
+  quality: 480,
 };
 const initialState = {
   configuration: initialConfiguration,
@@ -36,15 +37,55 @@ const init = async (dispatch) => {
     };
     player.addEventListener('error', ({ detail }) => onError(detail));
 
+    const qualityValue = cookies.get('userPreferredQuality');
+
     // get previous configuration from cookies
     const configuration = {
-      language: cookies.get('userPreferredAudioLanguage'),
-      subtitles: cookies.get('userPreferredTextLanguage'),
+      language: cookies.get('userPreferredAudioLanguage') || initialConfiguration.language,
+      subtitles: cookies.get('userPreferredTextLanguage') || initialConfiguration.subtitles,
+      quality: qualityValue ? parseInt(qualityValue) : initialConfiguration.quality,
     };
+
+    const trackSelectionCallback = (tracks) => {
+      // HACK: TODO MAYBE: no idea how to access the state inside this function, so I'll just use the cookie
+      // I would prefer to access the state
+      let quality = parseInt(cookies.get('userPreferredQuality'));
+      let language = cookies.get('userPreferredAudioLanguage');
+      let subtitles = cookies.get('userPreferredTextLanguage');
+
+      if (!!window.customConfig) {
+        quality = window.customConfig.quality;
+        language = window.customConfig.language;
+        subtitles = window.customConfig.subtitles;
+
+        window.customConfig = null;
+      }
+
+      console.log(quality, language, subtitles);
+
+      const videoWithAudio = tracks
+        .sort((a, b) => a.height - b.height) // qualities are now sorted from worst to best
+        .filter(track => track.type === 'variant' && track.height <= quality); // choose all qualities smaller than the preferrence
+      
+      const videoWithCorrectLanguage = videoWithAudio.filter(track => track.language === language);
+      console.log(videoWithCorrectLanguage);
+
+      const subtitlesTracks = tracks.filter(track => track.type === 'text').filter(track => track.language === subtitles);
+      console.log(subtitlesTracks);
+
+      return [
+        ...subtitlesTracks,
+        videoWithCorrectLanguage.length > 0 ? videoWithCorrectLanguage.pop() : videoWithAudio.pop() // choose english when preferrence is not available
+      ];
+    }
+
     // make shaka dispatch progress events so that we can have a progress bar when downloading
-    const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent("storage-progress", { detail: { content, progress }}));
+    const progressCallback = (content, progress) => window.dispatchEvent(new CustomEvent('storage-progress', { detail: { content, progress }}));
     player.configure({
-      offline: { progressCallback },
+      offline: {
+        progressCallback,
+        trackSelectionCallback,
+      },
       preferredAudioLanguage: configuration.language,
       preferredTextLanguage: configuration.subtitles,
     });
@@ -116,12 +157,21 @@ const reducer = (state, { type, payload, dispatch }) => {
       };
     case 'SET_CONFIG_SUBTITLES':
       cookies.set('userPreferredTextLanguage', payload, { path: '/' });
-      state.player.configure({ preferredTextLanguage: payload });
+      state.player.configure({ preferredTextLanguage: payload === 'none' ? '' : payload });
       return {
         ...state,
         configuration: {
           ...state.configuration,
           subtitles: payload,
+        },
+      };
+    case 'SET_CONFIG_QUALITY':
+      cookies.set('userPreferredQuality', payload, { path: '/' });
+      return {
+        ...state,
+        configuration: {
+          ...state.configuration,
+          quality: payload,
         },
       };
     default:

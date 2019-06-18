@@ -15,9 +15,8 @@ const MediaBrowser = ({ history }) => {
   const downloadVideo = (videoId) => {
     if (!storage.getStoreInProgress()) { // only one download at a time with shaka
       if (dbIndex.find(v => v.appMetadata.id === videoId)) { // check if already in storage
-        if (!window.confirm('Are you sure you want download this again?')) {
-          return;
-        }
+        alert('You already have the video in your library.');
+        return;
       }
       const video = videos.find(v => v.id === videoId);
       storage.store(video.manifestUri, {
