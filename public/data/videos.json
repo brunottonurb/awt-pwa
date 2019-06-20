@@ -52,7 +52,7 @@
   {
     "manifestUri": "http://yt-dash-mse-test.commondatastorage.googleapis.com/media/oops-20120802-manifest.mpd",
     "title": "Nexus Q",
-    "id": "nexq",
+    "id": "nexusq",
     "tagline": "Nexus Q promotion.",
     "poster": "https://cnet1.cbsistatic.com/img/SHjhAba8foL-bSeIK7c3CgviA6M=/868x488/2012/06/28/20393f82-67c3-11e3-a665-14feb5ca9861/GoogleNexusQ_35339164_04.jpg",
     "qualities": [144, 240, 360, 480, 720, 1080],
