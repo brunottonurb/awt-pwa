@@ -18,5 +18,25 @@
     "qualities": [180, 270, 360, 540, 720, 1080],
     "languages": ["en"],
     "subtitles": []
+  },
+  {
+    "manifestUri": "https://bitmovin-a.akamaihd.net/content/playhouse-vr/mpds/105560.mpd",
+    "title": "360 Video stream",
+    "id": "360_video",
+    "tagline": "Some 360 video.",
+    "poster": "https://roadtovrlive-5ea0.kxcdn.com/wp-content/uploads/2017/05/htc-link-1.jpg",
+    "qualities": [360, 540, 720, 1080],
+    "languages": ["en"],
+    "subtitles": []
+  },
+  {
+    "manifestUri": "https://storage.googleapis.com/bitmovin-demos/av1/stream_chrome.mpd",
+    "title": "Another Stream",
+    "id": "stream",
+    "tagline": "Yet another test stream",
+    "poster": "https://bitmovin-a.akamaihd.net/webpages/demos/content/av1/poster_tos.jpg",
+    "qualities": [266, 532, 798],
+    "languages": ["en"],
+    "subtitles": []
   }
 ]
