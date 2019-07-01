@@ -7,10 +7,10 @@ const STATIC_CACHE_LIST = [
   '/awt-pwa/', '/awt-pwa/data/videos.json', '/awt-pwa/manifest.json',
   '/awt-pwa/favicon.ico', '/awt-pwa/asset-manifest.json', '/awt-pwa/index.html',
   '/awt-pwa/static/js/2.2c4eb6d8.chunk.js',
-  '/awt-pwa/static/js/main.7587af88.chunk.js',
+  '/awt-pwa/static/js/main.ec5e1fd6.chunk.js',
   '/awt-pwa/static/js/runtime~main.a5205106.js',
   '/awt-pwa/static/css/2.266e55a5.chunk.css',
-  '/awt-pwa/precache-manifest.2d1ac809afe9f131f00e72337fc5ce6e.js'
+  '/awt-pwa/precache-manifest.7c7249dae3d0b8c2832489efcb235b0d.js'
 ];
 
 // caches static resources

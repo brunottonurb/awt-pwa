@@ -10,72 +10,32 @@
     "subtitles": ["en", "el", "fr", "pt-BR"]
   },
   {
-    "manifestUri": "http://rdmedia.bbc.co.uk/dash/ondemand/bbb/2/client_manifest-common_init.mpd",
-    "title": "Big Buck Bunny",
-    "id": "bbb",
-    "tagline": "Short animation film from Blender.",
-    "poster": "http://demo.megathe.me/heat/wp-content/uploads/2012/11/Big_Buck_Bunny_Trailer_480x270.png",
-    "qualities": [288, 396, 504, 720, 1080],
-    "languages": ["en"],
-    "subtitles": []
-  },
-  {
-    "manifestUri": "http://rdmedia.bbc.co.uk/dash/ondemand/elephants_dream/1/client_manifest-all.mpd",
-    "title": "Elephants Dream",
-    "id": "elDream",
-    "tagline": "Another short animation movie. (also from Blender)",
-    "poster": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Elephants_Dream%28HQ%29.webm/640px-seek%3D13-Elephants_Dream%28HQ%29.webm.jpg",
-    "qualities": [288, 396, 504, 720, 1080],
-    "languages": ["en"],
-    "subtitles": []
-  },
-  {
-    "manifestUri": "http://yt-dash-mse-test.commondatastorage.googleapis.com/media/car-20120827-manifest.mpd",
-    "title": "Autonomous Driving",
-    "id": "autoDriving",
-    "tagline": "Autonomous Driving by Google.",
-    "poster": "https://i.ytimg.com/vi/cdgQpa1pUUE/maxresdefault.jpg",
-    "qualities": [144, 240, 360, 480, 720, 1080],
-    "languages": ["en"],
-    "subtitles": []
-  },
-  {
-    "manifestUri": "http://www-itec.uni-klu.ac.at/ftp/datasets/DASHDataset2014/TearsOfSteel/2sec/TearsOfSteel_2s_onDemand_2014_05_09.mpd",
-    "title": "Tears Of Steel",
-    "id": "tos",
-    "tagline": "Yet another Sci-Fi movie.",
-    "poster": "https://i.ytimg.com/vi/n-yGImWFmUs/maxresdefault.jpg",
-    "qualities": [270, 360, 720, 1080],
-    "languages": ["en"],
-    "subtitles": []
-  },
-  {
-    "manifestUri": "http://yt-dash-mse-test.commondatastorage.googleapis.com/media/oops-20120802-manifest.mpd",
-    "title": "Nexus Q",
-    "id": "nexusq",
-    "tagline": "Nexus Q promotion.",
-    "poster": "https://cnet1.cbsistatic.com/img/SHjhAba8foL-bSeIK7c3CgviA6M=/868x488/2012/06/28/20393f82-67c3-11e3-a665-14feb5ca9861/GoogleNexusQ_35339164_04.jpg",
-    "qualities": [144, 240, 360, 480, 720, 1080],
-    "languages": ["en"],
-    "subtitles": []
-  },
-  {
-    "manifestUri": "http://yt-dash-mse-test.commondatastorage.googleapis.com/media/motion-20120802-manifest.mpd",
-    "title": "Something about GMail",
-    "id": "gmail",
-    "tagline": "Gmail Stuff.",
-    "poster": "https://i.computer-bild.de/imgs/9/9/5/0/3/6/5/Gmail-Logo-658x370-03584f0033856b12.jpg",
-    "qualities": [144, 240, 360, 480, 720, 1080],
-    "languages": ["en"],
-    "subtitles": []
-  },
-  {
     "manifestUri": "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd",
     "title": "Some video I found",
     "id": "frefre",
     "tagline": "I found this on the DASHjs demo page from Akamai. I don't know the title of the video.",
     "poster": "https://i.ytimg.com/vi/kSRAbdwWm6M/maxresdefault.jpg",
     "qualities": [180, 270, 360, 540, 720, 1080],
+    "languages": ["en"],
+    "subtitles": []
+  },
+  {
+    "manifestUri": "https://bitmovin-a.akamaihd.net/content/playhouse-vr/mpds/105560.mpd",
+    "title": "360 Video stream",
+    "id": "360_video",
+    "tagline": "Some 360 video.",
+    "poster": "https://roadtovrlive-5ea0.kxcdn.com/wp-content/uploads/2017/05/htc-link-1.jpg",
+    "qualities": [360, 540, 720, 1080, 1920],
+    "languages": ["en"],
+    "subtitles": []
+  },
+  {
+    "manifestUri": "https://storage.googleapis.com/bitmovin-demos/av1/stream_chrome.mpd",
+    "title": "Another Stream",
+    "id": "stream",
+    "tagline": "Yet another test stream",
+    "poster": "https://bitmovin-a.akamaihd.net/webpages/demos/content/av1/poster_tos.jpg",
+    "qualities": [266, 532, 798],
     "languages": ["en"],
     "subtitles": []
   }
