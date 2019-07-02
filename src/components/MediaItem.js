@@ -86,9 +86,9 @@ const MediaItem = ({
                       {languages.map((language, index) => <option key={`dropdown_download_options-${id}-language-${index}`} value={language}>{language}</option>)}
                     </select>
                   </div>
-                  {subtitles.length ? (
-                    <div className="form-group row">
-                      <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-subtitles`}>Subtitles</label>
+                  <div className="form-group row">
+                    <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-subtitles`}>Subtitles</label>
+                    {subtitles.length ? (
                       <select
                         className="custom-select custom-select-sm"
                         value={customSubtitles || ''}
@@ -98,10 +98,17 @@ const MediaItem = ({
                         {subtitles.map((subtitle, index) => <option key={`dropdown_download_options-${id}-subtitles-${index}`} value={subtitle}>{subtitle}</option>)}
                         <option value="none">None</option>
                       </select>
-                    </div>
-                  ) : (
-                    <p>TODO</p>
-                  )}
+                      ) : (
+                        <select
+                          className="custom-select custom-select-sm"
+                          value="none"
+                          id={`dropdown_download_options-${id}-subtitles`}
+                          disabled
+                        >
+                          <option value="none">None</option>
+                        </select>
+                      )}
+                  </div>
                   <div className="form-group row">
                     <label className="col-form-label col-form-label-sm" htmlFor={`dropdown_download_options-${id}-quality`}>Quality</label>
                     <select

@@ -80,6 +80,8 @@ const MediaPlayer = ({ match, history }) => {
       // detach player from element when component unmounts
       player.detach(videoElement);
       saveVideoPlaybackTime();
+      videoElement.removeEventListener('pause', saveVideoPlaybackTime);
+      videoElement.removeEventListener('ended', saveVideoPlaybackTime);
     };
   }, [match, metadata, player, storage]); // run this effect only when it is first mounted or these values change
 

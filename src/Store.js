@@ -68,17 +68,13 @@ const init = async (dispatch) => {
         window.customConfig = null;
       }
 
-      console.log(quality, language, subtitles);
-
       const videoWithAudio = tracks
         .sort((a, b) => a.height - b.height) // qualities are now sorted from worst to best
         .filter(track => track.type === 'variant' && track.height <= quality); // choose all qualities smaller than the preferrence
 
       const videoWithCorrectLanguage = videoWithAudio.filter(track => track.language === language);
-      console.log(videoWithCorrectLanguage);
 
       const subtitlesTracks = tracks.filter(track => track.type === 'text').filter(track => track.language === subtitles);
-      console.log(subtitlesTracks);
 
       return [
         ...subtitlesTracks,
