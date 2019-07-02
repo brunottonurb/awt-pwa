@@ -34,7 +34,7 @@ const MediaPlayer = ({ match, history }) => {
 
     const playVideo = (playState) => {
 
-      const playbackTime = cookies.get(`videoPlaybackTime:${metadata.id}`);
+      let playbackTime = cookies.get(`videoPlaybackTime:${metadata.id}`);
       if (!!playbackTime && parseInt(playbackTime) !== 0) {
           confirmAlert({
             title:'Resume Playback?',
@@ -42,35 +42,34 @@ const MediaPlayer = ({ match, history }) => {
             buttons: [
               {
                 label: 'Yes',
-                onClick: () =>  {
-                  playState==='stream' ? player.load(metadata.manifestUri, playbackTime) : storage.list().then((list) => { 
-                    // get offlineUri from storage
-                    const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
-                    player.load(offlineVideo.offlineUri, playbackTime);
-                  });
-                },
+                onClick: () =>  fetchAndPlayVideo(playState, playbackTime)   
               },
               {
                 label: 'No',
                 //reset saved playbackTime to 0
-                onClick: () =>{ 
-                  playState==='stream' ? player.load(metadata.manifestUri, playbackTime) : storage.list().then((list) => { 
-                    // get offlineUri from storage
-                    const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
-                    player.load(offlineVideo.offlineUri);
-                  });
-               }
+                onClick: () => 
+                {
+                  cookies.set("videoPlaybackTime:"+ metadata.id,0);
+                  playbackTime=0;
+                  fetchAndPlayVideo(playState, playbackTime)  
+                }             
               }
             ]
           });
       } else {
-        playState==='stream' ? player.load(metadata.manifestUri) : storage.list().then((list) => { 
-          // get offlineUri from storage
-          const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
-          player.load(offlineVideo.offlineUri);
-        });
+        fetchAndPlayVideo(playState, playbackTime);
       }
-    };
+    }
+
+    const fetchAndPlayVideo = (playState, playbackTime) => 
+    {
+      playState==='stream' ? player.load(metadata.manifestUri, playbackTime) : storage.list().then((list) => { 
+        // get offlineUri from storage
+        const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
+        player.load(offlineVideo.offlineUri, playbackTime); 
+    });
+  }
+
 
     player.attach(videoElement);
 
