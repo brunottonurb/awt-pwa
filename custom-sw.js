@@ -6,11 +6,11 @@ const DYNAMIC_CHACHE = 'dynamic-site-cache';
 const STATIC_CACHE_LIST = [
   '/awt-pwa/', '/awt-pwa/data/videos.json', '/awt-pwa/manifest.json',
   '/awt-pwa/favicon.ico', '/awt-pwa/asset-manifest.json', '/awt-pwa/index.html',
-  '/awt-pwa/static/js/2.943567e2.chunk.js',
-  '/awt-pwa/static/js/main.65790caf.chunk.js',
+  '/awt-pwa/static/js/2.2c4eb6d8.chunk.js',
+  '/awt-pwa/static/js/main.2472e154.chunk.js',
   '/awt-pwa/static/js/runtime~main.a5205106.js',
-  '/awt-pwa/static/css/2.d64b8b57.chunk.css',
-  '/awt-pwa/precache-manifest.c9879f4fad42023cfe68de7594e603dc.js'
+  '/awt-pwa/static/css/2.266e55a5.chunk.css',
+  '/awt-pwa/precache-manifest.b842ed36a46524ad7b5ddf5798eaae9d.js'
 ];
 
 // caches static resources

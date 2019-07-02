@@ -13,7 +13,7 @@
     "manifestUri": "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd",
     "title": "Some video I found",
     "id": "frefre",
-    "tagline": "I found this on the DASHjs demo page from Akamai. I don't know the title of the video.",
+    "tagline": "I found this on the DASHjs demo page from Akamai.",
     "poster": "https://i.ytimg.com/vi/kSRAbdwWm6M/maxresdefault.jpg",
     "qualities": [180, 270, 360, 540, 720, 1080],
     "languages": ["en"],
@@ -25,7 +25,7 @@
     "id": "360_video",
     "tagline": "Some 360 video.",
     "poster": "https://roadtovrlive-5ea0.kxcdn.com/wp-content/uploads/2017/05/htc-link-1.jpg",
-    "qualities": [360, 540, 720, 1080, 1920],
+    "qualities": [360, 540, 720, 1080],
     "languages": ["en"],
     "subtitles": []
   },
