@@ -31,6 +31,7 @@ const MediaPlayer = ({ match, history }) => {
 
     const playVideo = (playState) => {
       var playbackTime = cookies.get("videoPlaybackTime:"+metadata.id);
+      console.log("playbacktime is: " + playbackTime);
       if (!!playbackTime && parseInt(playbackTime) !== 0) {
           confirmAlert({
             title:'Resume Playback?',
@@ -39,6 +40,7 @@ const MediaPlayer = ({ match, history }) => {
               {
                 label: 'Yes',
                 onClick: () =>  {
+                  console.log("clickedyes");
                   playState==='stream' ? player.load(metadata.manifestUri, playbackTime) : storage.list().then((list) => { 
                     // get offlineUri from storage
                     const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
@@ -49,7 +51,13 @@ const MediaPlayer = ({ match, history }) => {
               {
                 label: 'No',
                 //reset saved playbackTime to 0
-                onClick: () => cookies.set("videoPlaybackTime:"+metadata.id,'0')
+                onClick: () =>{ 
+                  playState==='stream' ? player.load(metadata.manifestUri, playbackTime) : storage.list().then((list) => { 
+                    // get offlineUri from storage
+                    const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
+                    player.load(offlineVideo.offlineUri);
+                  });
+               }
               }
             ]
           });
@@ -71,7 +79,6 @@ const MediaPlayer = ({ match, history }) => {
 
     if (match.params.mode === 'stream') {
       playVideo('stream');
-      player.load(metadata.manifestUri); // maybe I should catch errors here TODO
     } else { // mode === 'offline'
       
       playVideo('offline');
