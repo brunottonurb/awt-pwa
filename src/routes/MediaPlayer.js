@@ -24,14 +24,17 @@ const MediaPlayer = ({ match, history }) => {
     // attach player to video tag
 
     const saveVideoPlaybackTime = () => {
-      if(videoElement.currentTime!==0){
+      if (videoElement.currentTime !== 0) {
           cookies.set("videoPlaybackTime:"+ metadata.id,videoElement.currentTime);
        }
-    }
+    };
+
+    videoElement.addEventListener('pause', saveVideoPlaybackTime);
+    videoElement.addEventListener('ended', saveVideoPlaybackTime);
 
     const playVideo = (playState) => {
-      var playbackTime = cookies.get("videoPlaybackTime:"+metadata.id);
-      console.log("playbacktime is: " + playbackTime);
+
+      const playbackTime = cookies.get(`videoPlaybackTime:${metadata.id}`);
       if (!!playbackTime && parseInt(playbackTime) !== 0) {
           confirmAlert({
             title:'Resume Playback?',
@@ -40,13 +43,12 @@ const MediaPlayer = ({ match, history }) => {
               {
                 label: 'Yes',
                 onClick: () =>  {
-                  console.log("clickedyes");
                   playState==='stream' ? player.load(metadata.manifestUri, playbackTime) : storage.list().then((list) => { 
                     // get offlineUri from storage
                     const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
                     player.load(offlineVideo.offlineUri, playbackTime);
                   });
-                } 
+                },
               },
               {
                 label: 'No',
@@ -61,26 +63,20 @@ const MediaPlayer = ({ match, history }) => {
               }
             ]
           });
-      }
-      else
-      {
+      } else {
         playState==='stream' ? player.load(metadata.manifestUri) : storage.list().then((list) => { 
           // get offlineUri from storage
           const offlineVideo = list.find(video => video.appMetadata.id === match.params.id);
           player.load(offlineVideo.offlineUri);
-        })
+        });
       }
-    }
-
-    videoElement.addEventListener('pause', saveVideoPlaybackTime);
-    videoElement.addEventListener('ended', saveVideoPlaybackTime);
+    };
 
     player.attach(videoElement);
 
     if (match.params.mode === 'stream') {
       playVideo('stream');
     } else { // mode === 'offline'
-      
       playVideo('offline');
     }
     return () => {
