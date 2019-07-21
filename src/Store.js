@@ -67,6 +67,10 @@ const init = async (dispatch) => {
 
         window.customConfig = null;
       }
+      player.configure({
+        preferredAudioLanguage: language,
+        preferredTextLanguage: subtitles,
+      });
 
       const videoWithAudio = tracks
         .sort((a, b) => a.height - b.height) // qualities are now sorted from worst to best
@@ -75,7 +79,8 @@ const init = async (dispatch) => {
       const videoWithCorrectLanguage = videoWithAudio.filter(track => track.language === language);
 
       const subtitlesTracks = tracks.filter(track => track.type === 'text').filter(track => track.language === subtitles);
-
+      console.log(subtitlesTracks);
+      //player.configure({ preferredTextLanguage: subtitles});
       return [
         ...subtitlesTracks,
         videoWithCorrectLanguage.length > 0 ? videoWithCorrectLanguage.pop() : videoWithAudio.pop() // choose english when preferrence is not available
