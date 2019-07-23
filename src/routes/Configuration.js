@@ -81,7 +81,7 @@ const Configuration = () => {
               </div>
             </div>
             <div className="row">
-              <legend className="col-form-label col-sm-2 pt-0">Preferred Video Quality</legend>
+              <legend className="col-form-label col-sm-2 pt-0">Preferred Video Download Quality</legend>
               <div className="col">
                 {[1080, 720, 480].map(q => (
                   <div className="form-check" key={`key_quality_${q}`}>
