@@ -5,11 +5,25 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import debounce from 'lodash/debounce';
 import { Store } from '../Store';
 import StorageInfo from '../components/StorageInfo';
 import DownloadItem from '../components/DownloadItem';
 import DownloadInProgress from '../components/DownloadInProgress';
+
+const debounce = (func, wait, immediate) => {
+	let timeout;
+	return function() {
+		const context = this, args = arguments;
+		const later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		const callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
 
 const DownloadManager = () => {
   const { state: { dbIndex, storage }, dispatch } = useContext(Store);
