@@ -1,4 +1,4 @@
-// create to cache types
+// create two cache types
 const STATIC_CACHE = 'static-site-cache';
 const DYNAMIC_CHACHE = 'dynamic-site-cache';
 
