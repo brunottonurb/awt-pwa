@@ -12,7 +12,7 @@ const STATIC_CACHE_LIST = [
   '/awt-pwa/static/js/2.9583270a.chunk.js',
   '/awt-pwa/static/js/main.28749014.chunk.js',
   '/awt-pwa/static/js/runtime~main.a5205106.js',
-  '/awt-pwa/precache-manifest.a217b1852c6513d5aaea9757584832d2.js'
+  '/awt-pwa/precache-manifest.6f3dcfd772731b366c74368802f42947.js'
 ];
 
 // initiate cache with static resources
