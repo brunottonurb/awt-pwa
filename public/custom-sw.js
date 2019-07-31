@@ -1,19 +1,21 @@
-// cache names
+// create to cache types
 const STATIC_CACHE = 'static-site-cache';
 const DYNAMIC_CHACHE = 'dynamic-site-cache';
 
-// static resources
+// required static resources
 const STATIC_CACHE_LIST = [
   '/awt-pwa/', '/awt-pwa/data/videos.json', '/awt-pwa/manifest.json',
   '/awt-pwa/favicon.ico', '/awt-pwa/asset-manifest.json', '/awt-pwa/index.html',
+  '/awt-pwa/icons/faviconSmall.png', '/awt-pwa/icons/faviconMedium.png',
+  '/awt-pwa/icons/faviconLarge.png', '/awt-pwa/icons/faviconExtraLarge.png',
   '/awt-pwa/static/css/2.d64b8b57.chunk.css',
-  '/awt-pwa/static/js/2.943567e2.chunk.js',
-  '/awt-pwa/static/js/main.785d78e9.chunk.js',
+  '/awt-pwa/static/js/2.9583270a.chunk.js',
+  '/awt-pwa/static/js/main.28749014.chunk.js',
   '/awt-pwa/static/js/runtime~main.a5205106.js',
-  '/awt-pwa/precache-manifest.2c17b7eceb8c395dad0f74a101482e4c.js'
+  '/awt-pwa/precache-manifest.a217b1852c6513d5aaea9757584832d2.js'
 ];
 
-// caches static resources
+// initiate cache with static resources
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(STATIC_CACHE)
@@ -28,9 +30,9 @@ self.addEventListener('install', function (event) {
 });
 
 
-// garbage collector for old caches
+// delete old cache
 self.addEventListener('activate', function (event) {
-  // checks of cache types
+  // checks both cache types
   let cacheList = [STATIC_CACHE, DYNAMIC_CHACHE];
 
   event.waitUntil(
@@ -38,11 +40,11 @@ self.addEventListener('activate', function (event) {
       .then(function (cacheNames) {
         return cacheNames.filter(
           cacheName =>
-            !cacheList.includes(cacheName));  // find old caches
+            !cacheList.includes(cacheName));  // find old files
       })
       .then(function (cachesToDelete) {
         return Promise.all(cachesToDelete.map(cacheToDelete => {
-          return caches.delete(cacheToDelete);  // delete cache
+          return caches.delete(cacheToDelete);  // delete files
         }));
       })
       .then(() => self.clients.claim())
@@ -55,6 +57,7 @@ self.addEventListener('activate', function (event) {
 
 // handle fetch events
 self.addEventListener('fetch', function (event) {
+  //check origin
   if (event.request.url.startsWith(self.location.origin)) {
     event.respondWith(caches.match(event.request).then(function (cachedResp) {
       // try to find cached resources
