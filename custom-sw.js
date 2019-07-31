@@ -1,4 +1,4 @@
-// create two cache types
+// create to cache types
 const STATIC_CACHE = 'static-site-cache';
 const DYNAMIC_CHACHE = 'dynamic-site-cache';
 
@@ -6,13 +6,11 @@ const DYNAMIC_CHACHE = 'dynamic-site-cache';
 const STATIC_CACHE_LIST = [
   '/awt-pwa/', '/awt-pwa/data/videos.json', '/awt-pwa/manifest.json',
   '/awt-pwa/favicon.ico', '/awt-pwa/asset-manifest.json', '/awt-pwa/index.html',
-  '/awt-pwa/icons/faviconSmall.png', '/awt-pwa/icons/faviconMedium.png',
-  '/awt-pwa/icons/faviconLarge.png', '/awt-pwa/icons/faviconExtraLarge.png',
   '/awt-pwa/static/css/2.d64b8b57.chunk.css',
-  '/awt-pwa/static/js/2.9583270a.chunk.js',
-  '/awt-pwa/static/js/main.28749014.chunk.js',
+  '/awt-pwa/static/js/2.943567e2.chunk.js',
+  '/awt-pwa/static/js/main.785d78e9.chunk.js',
   '/awt-pwa/static/js/runtime~main.a5205106.js',
-  '/awt-pwa/precache-manifest.a217b1852c6513d5aaea9757584832d2.js'
+  '/awt-pwa/precache-manifest.2c17b7eceb8c395dad0f74a101482e4c.js'
 ];
 
 // initiate cache with static resources
