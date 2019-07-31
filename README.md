@@ -2,8 +2,6 @@
 
 Watch streaming videos or save them in your browsers IndexedDB for offline viewing.
 
-There are still lots of bugs.
-
 <hr>
 
 1. You need to have Node.js installed.
